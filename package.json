@@ -1,0 +1,17 @@
+{
+  "name": "venture-systems-studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Autonomous business software studio",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "express": "^5.1.0"
+  }
+}
