@@ -1,0 +1,1 @@
+User-agent: *\nAllow: /\nSitemap: https://venture-systems.onrender.com/sitemap.xml\n
