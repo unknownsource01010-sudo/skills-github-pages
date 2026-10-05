@@ -4,9 +4,46 @@ const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 10000;
+const RATE_WINDOW_MS = 60_000;
+const RATE_MAX = 30;
+const rateBuckets = new Map();
 
+app.set("trust proxy", 1);
 app.disable("x-powered-by");
-app.use(express.json({ limit: "256kb" }));
+
+app.use((req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Referrer-Policy", "same-origin");
+  res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=()");
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Content-Security-Policy", "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; font-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'");
+  if (req.secure) res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  next();
+});
+
+function apiLimit(req, res, next) {
+  const now = Date.now();
+  const key = req.ip || req.socket.remoteAddress || "unknown";
+  let bucket = rateBuckets.get(key);
+  if (!bucket || now - bucket.started >= RATE_WINDOW_MS) {
+    bucket = { started: now, count: 0 };
+    rateBuckets.set(key, bucket);
+  }
+  bucket.count += 1;
+  if (rateBuckets.size > 1000) {
+    for (const [ip, entry] of rateBuckets) {
+      if (now - entry.started >= RATE_WINDOW_MS) rateBuckets.delete(ip);
+    }
+  }
+  if (bucket.count > RATE_MAX) {
+    res.setHeader("Retry-After", "60");
+    return res.status(429).json({ error: "Too many requests. Please try again shortly." });
+  }
+  next();
+}
+
+app.use(express.json({ limit: "64kb", type: "application/json" }));
 app.use(express.static(path.join(__dirname, "public"), {
   etag: true,
   maxAge: "1h"
@@ -74,13 +111,13 @@ function generatedIndex(spec) {
       </div>
       <p class="muted">${MODULES[id].note}</p>
       <div class="cards">
-        <article class="card"><span>Open</span><strong>0</strong><small>starter records</small></article>
+        <article class="card"><span>Open</span><strong data-count="${id}">0</strong><small>local records</small></article>
         <article class="card"><span>Today</span><strong>Ready</strong><small>workspace initialized</small></article>
         <article class="card"><span>Status</span><strong>Local</strong><small>safe demo storage</small></article>
       </div>
       <div class="panel">
         <div class="panel-title">Recent activity</div>
-        <div class="empty">No records yet. Use “Add record” to create your first local item.</div>
+        <div class="empty" data-activity="${id}">No records yet. Use “Add record” to create your first local item.</div>
       </div>
     </section>`).join("");
 
@@ -116,14 +153,21 @@ function generatedCss() {
 }
 
 function generatedAppJs() {
-  return `const buttons=[...document.querySelectorAll(".nav-item")];const views=[...document.querySelectorAll(".view")];function openView(id){buttons.forEach(b=>b.classList.toggle("active",b.dataset.view===id));views.forEach(v=>v.classList.toggle("active",v.id==="view-"+id))}buttons.forEach(b=>b.addEventListener("click",()=>openView(b.dataset.view)));if(buttons[0])openView(buttons[0].dataset.view);document.querySelectorAll("[data-add]").forEach(b=>b.addEventListener("click",()=>{const key="generated-"+b.dataset.add;const rows=JSON.parse(localStorage.getItem(key)||"[]");rows.push({created:new Date().toISOString(),title:"New record"});localStorage.setItem(key,JSON.stringify(rows));alert("Starter record saved locally on this device.");}));`;
+  return `const buttons=[...document.querySelectorAll(".nav-item")];const views=[...document.querySelectorAll(".view")];
+function rowsFor(id){try{return JSON.parse(localStorage.getItem("generated-"+id)||"[]")}catch{return[]}}
+function renderModule(id){const rows=rowsFor(id);const count=document.querySelector('[data-count="'+id+'"]');const activity=document.querySelector('[data-activity="'+id+'"]');if(count)count.textContent=String(rows.length);if(activity){activity.textContent=rows.length?rows.slice(-5).reverse().map(r=>new Date(r.created).toLocaleString()+" — "+r.title).join(" · "):"No records yet. Use “Add record” to create your first local item."}}
+function openView(id){buttons.forEach(b=>b.classList.toggle("active",b.dataset.view===id));views.forEach(v=>v.classList.toggle("active",v.id==="view-"+id));renderModule(id)}
+buttons.forEach(b=>b.addEventListener("click",()=>openView(b.dataset.view)));if(buttons[0])openView(buttons[0].dataset.view);
+document.querySelectorAll("[data-add]").forEach(b=>b.addEventListener("click",()=>{const id=b.dataset.add;const title=prompt("Record name");if(!title)return;const rows=rowsFor(id);rows.push({created:new Date().toISOString(),title:title.trim().slice(0,100)||"New record"});localStorage.setItem("generated-"+id,JSON.stringify(rows));renderModule(id)}));`;
 }
 
-app.post("/api/blueprint", (req, res) => {
+app.post("/api/blueprint", apiLimit, (req, res) => {
+  res.setHeader("Cache-Control", "no-store");
   res.json(blueprint(normalize(req.body || {})));
 });
 
-app.post("/api/build", (req, res) => {
+app.post("/api/build", apiLimit, (req, res) => {
+  res.setHeader("Cache-Control", "no-store");
   const spec = normalize(req.body || {});
   const folder = safeFileName(spec.business);
   const archive = archiver("zip", { zlib: { level: 9 } });
@@ -139,6 +183,7 @@ app.post("/api/build", (req, res) => {
   archive.append(generatedIndex(spec), { name: folder + "/index.html" });
   archive.append(generatedCss(), { name: folder + "/styles.css" });
   archive.append(generatedAppJs(), { name: folder + "/app.js" });
+  archive.append(JSON.stringify(blueprint(spec), null, 2), { name: folder + "/blueprint.json" });
   archive.append(JSON.stringify({
     name: spec.business + " Operations",
     short_name: spec.business.slice(0, 18),
@@ -151,7 +196,7 @@ app.post("/api/build", (req, res) => {
   archive.finalize();
 });
 
-app.get("/health", (_req, res) => res.json({ ok: true }));
+app.get("/health", (_req, res) => res.json({ ok: true, service: "venture-systems", version: "1.1.0" }));
 
 app.use((_req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
