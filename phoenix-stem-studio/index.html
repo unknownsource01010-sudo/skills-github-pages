@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <meta name="theme-color" content="#0b1120"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Phoenix Stems">
 <link rel="manifest" href="manifest.webmanifest">
-<title>Phoenix Stem Studio · iPhone</title>
+<title>Phoenix Stem Studio · Suno ZIP Import</title>
 <style>
 :root{color-scheme:dark;--bg:#090f1e;--card:#121d2e;--card2:#19263b;--stroke:#293c57;--bright:#5ee5f4;--blue:#3f9fdd;--white:#eef7ff;--muted:#a6bad1;--warn:#f6c570;--good:#74e6b1}
 *{box-sizing:border-box}html{height:100%;background:var(--bg)}body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:radial-gradient(circle at 75% -10%,#14435d 0%,transparent 39%),var(--bg);color:var(--white);margin:0;padding:0 0 env(safe-area-inset-bottom)}button,select,input{font:inherit}button{cursor:pointer;touch-action:manipulation}input[type=range]{accent-color:var(--bright);width:100%}input[type=file]{display:none}
@@ -13,13 +13,23 @@ header{padding:max(21px,env(safe-area-inset-top)) 18px 13px;display:flex;align-i
 </style>
 </head>
 <body>
-<header><div class="mark" aria-hidden="true">♬</div><div><div class="brand">PHOENIX STEM STUDIO</div><div class="sub">RECOVER THE GROOVE · iPHONE EDITION</div></div><span class="badge">LOCAL MIXER</span></header>
+<header><div class="mark" aria-hidden="true">♬</div><div><div class="brand">PHOENIX STEM STUDIO</div><div class="sub">RECOVER THE GROOVE · iPHONE EDITION</div></div><span class="badge">v0.4 · ZIP READY</span></header>
 <main>
-<section class="panel"><div class="eyebrow">Your music · No cloud uploads</div><div class="heading">Preserve every instrument</div><p class="muted"><b>Quick start:</b> ① Extract the song ZIP in Files → ② Import one <b>.m4a / .mp3</b> stem → ③ Tap <b>Analyze 25 seconds</b>. Importing by itself only loads audio; it does not generate notes.</p>
+<section class="panel"><div class="eyebrow">Your music · No cloud uploads</div><div class="heading">Preserve every instrument</div><p class="muted"><b>Quick start:</b> Tap <b>Choose Suno ZIP</b> → pick your song/version → <b>Load chosen stems</b>. You can use the big nested <b>stem.zip</b> or a single song ZIP. The original audio stays on your phone. MIDI previews are separate and approximate.</p>
+<div class="panel" style="margin:9px 0;padding:12px;background:#0d2332;border-color:#286179" id="zipPanel">
+<div class="eyebrow">New · Suno ZIP + MIDI draft browser</div>
+<div class="two" style="margin-top:8px"><button class="btn primary" id="pickZip">📦 Choose Suno ZIP</button><button class="btn subtle" id="pickMidiZip">♫ Choose MIDI ZIP</button></div>
+<input id="zipInput" type="file" accept=".zip,application/zip"><input id="midiZipInput" type="file" accept=".zip,application/zip">
+<label class="small" for="zipChoice" style="display:block;margin-top:9px">Song/version inside ZIP</label>
+<select id="zipChoice" class="project" disabled><option>Choose stem.zip or an individual stem ZIP first</option></select>
+<div class="two" style="margin-top:8px"><button class="btn primary" id="loadZip" disabled>Load chosen stems</button><span class="small" id="zipInfo">No archive opened</span></div>
+<div id="zipProgress" class="small" style="margin-top:7px" role="status" aria-live="polite">The big ZIP is read as an index first—not unpacked all at once.</div>
+<details id="midiDetails" style="margin-top:9px"><summary class="small" style="cursor:pointer">Matching MIDI drafts <span id="midiCount"></span></summary><div id="midiList" class="small" style="margin-top:8px">Choose the companion MIDI ZIP to browse matching parts.</div></details>
+</div>
 <label class="small" for="project">Song / recording</label><select class="project" id="project">
 <option>Song A · Remastered</option><option>Song A · Version 4</option><option>Song B · Version 3</option><option>Song B · Version 2</option><option>Song C · Original</option><option>Song C · Versions 2/3</option><option>Song D</option><option>Song E</option><option>Song F</option><option>New unnamed recording</option>
 </select><div class="two" style="margin-top:11px"><button class="btn primary" id="load">＋ Import audio stem</button><button class="btn primary" id="quick">▶ Analyze 25 seconds</button></div><input id="files" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.aiff,.aif,.flac" multiple>
-<p class="small"><button class="btn subtle" id="save" style="width:100%">↓ Save work map</button></p><p class="file-help small">Import separate <b>vocals, guitar, piano, bass, drums, other</b> MP3/WAV/M4A tracks. They stay on your phone; imported file bytes are not uploaded. Import only one song's stems at a time.</p><div id="status" class="log" role="status" aria-live="polite">v0.3 ready. In Files, tap your ZIP to unzip it first, then import ONE .mp3 or .m4a track.</div></section>
+<p class="small"><button class="btn subtle" id="save" style="width:100%">↓ Save work map</button></p><p class="file-help small">Use the ZIP importer for your Suno 8–12 stem categories. The direct audio importer still works. Large ZIP imports may require free phone storage/memory; process one song version at a time. Nothing is uploaded.</p><div id="status" class="log" role="status" aria-live="polite">v0.4 ready. Tap Choose Suno ZIP; no need to unzip manually.</div></section>
 <section class="panel"><div class="eyebrow">Mix desk</div><div class="transport"><button id="play" class="btn primary" aria-label="Play or pause">▶</button><input id="seek" class="seek" type="range" min="0" max="100" value="0" step="0.01" aria-label="Song position"><span id="time" class="timer">0:00 / 0:00</span></div>
 <div class="two"><div><label class="small">Master level</label><input type="range" id="master" min="0" max="1.5" step="0.01" value="0.8"></div><div><label class="small">Loop section</label><button id="loop" class="btn subtle" style="width:100%">Loop off</button></div></div>
 <div class="tabs"><button class="tab active" data-tab="tracks">Individual tracks</button><button class="tab" data-tab="notes">Note recovery</button></div>
@@ -86,7 +96,7 @@ function renderTracks(){const root=$('tracks'),selected=$('analyze').value;root.
 function removeTrack(id){const t=state.tracks.find(x=>x.id===id);if(!t)return;t.el.pause();t.el.src='';URL.revokeObjectURL(t.url);try{t.source?.disconnect();t.analyzer?.disconnect();t.gain?.disconnect()}catch{}state.tracks=state.tracks.filter(x=>x!==t);renderTracks();updateGain();updateTime()}
 function setPlay(){$('play').textContent=state.playing?'Ⅱ':'▶';$('play').setAttribute('aria-label',state.playing?'Pause':'Play')}
 async function togglePlay(){
- if(!state.tracks.length){status('Import an extracted MP3 or M4A track first.');return}
+ if(!state.tracks.length){status('Import a song ZIP or audio stem first.');return}
  if(state.playing){state.tracks.forEach(t=>t.el.pause());state.playing=false;setPlay();status('Paused.');return}
  try{
   // iOS must receive the WebAudio resume and all HTMLMediaElement.play() calls in the same user gesture.
@@ -115,7 +125,7 @@ function estimatePitch(analyzer){if(!ctx)return null;const tmp=new Float32Array(
 const notename=m=>['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'][(m+120)%12]+(Math.floor(m/12)-1);
 function captureFrame(){const selected=state.tracks.find(t=>t.id===$('analyze').value);if(!selected||!selected.analyzer)return;const p=estimatePitch(selected.analyzer),t=selected.el.currentTime;if(!p){$('pitch').textContent='—';$('hz').textContent='No confident single pitch';return}$('pitch').textContent=notename(p.midi);$('hz').textContent=`${p.hz.toFixed(1)} Hz · ${Math.round(p.confidence*100)}%`;if(!state.playing)return;const prior=state.notes[state.notes.length-1],begin=Math.max(0,t-.075);if(prior&&prior.track===selected.name&&prior.midi===p.midi&&begin-prior.end<.21){prior.end=Math.max(prior.end,t+.06);prior.confidence=Math.max(prior.confidence,p.confidence)}else if(prior&&prior.track===selected.name&&begin-prior.end<.14&&prior.midi!==p.midi){prior.end=Math.min(prior.end,begin);state.notes.push({start:begin,end:t+.06,midi:p.midi,confidence:p.confidence,track:selected.name})}else state.notes.push({start:begin,end:t+.06,midi:p.midi,confidence:p.confidence,track:selected.name});$('count').textContent=state.notes.length;if(state.notes.length%6===0)renderNotes()}
 function renderNotes(){const root=$('noteList');root.textContent='';for(const n of state.notes.slice(-32)){const el=document.createElement('span');el.className='note-chip';el.textContent=`${format(n.start)} ${notename(n.midi)}`;root.append(el)}}
-async function quickAnalyze(){if(!state.tracks.length){status('First import one .m4a or MP3 stem (NOT a ZIP).');return}const sel=$('analyze');const t=state.tracks.find(x=>x.id===sel.value)||state.tracks[0];sel.value=t.id;showTab('notes');if(state.playing){state.tracks.forEach(x=>x.el.pause());state.playing=false;setPlay()}state.tracks.forEach(x=>x.solo=x.id===t.id);renderTracks();sel.value=t.id;updateGain();seek(0);state.notes=state.notes.filter(n=>n.track!==t.name);$('count').textContent=state.notes.length;renderNotes();state.capturing=true;state.autoUntil=Math.min(25,Number.isFinite(t.el.duration)&&t.el.duration>0?t.el.duration:25);$('capture').textContent='■ Stop capture';$('capture').classList.add('warn');$('progress').textContent='▶ Auto-analysis of '+t.name+' for 25 seconds. Listen and watch the note count rise.';status('Analyzing '+t.name+'. Playback should start; approximate pitch notes will appear below.');await togglePlay();if(!state.playing){state.capturing=false;state.autoUntil=null;status('Audio did not start on this iPhone. Try ▶ Play once, then Analyze 25 seconds again.')}}
+async function quickAnalyze(){if(!state.tracks.length){status('Import a Suno ZIP or individual MP3/M4A stems first.');return}const sel=$('analyze');const t=state.tracks.find(x=>x.id===sel.value)||state.tracks[0];sel.value=t.id;showTab('notes');if(state.playing){state.tracks.forEach(x=>x.el.pause());state.playing=false;setPlay()}state.tracks.forEach(x=>x.solo=x.id===t.id);renderTracks();sel.value=t.id;updateGain();seek(0);state.notes=state.notes.filter(n=>n.track!==t.name);$('count').textContent=state.notes.length;renderNotes();state.capturing=true;state.autoUntil=Math.min(25,Number.isFinite(t.el.duration)&&t.el.duration>0?t.el.duration:25);$('capture').textContent='■ Stop capture';$('capture').classList.add('warn');$('progress').textContent='▶ Auto-analysis of '+t.name+' for 25 seconds. Listen and watch the note count rise.';status('Analyzing '+t.name+'. Playback should start; approximate pitch notes will appear below.');await togglePlay();if(!state.playing){state.capturing=false;state.autoUntil=null;status('Audio did not start on this iPhone. Try ▶ Play once, then Analyze 25 seconds again.')}}
 function captureToggle(){state.autoUntil=null;if(!state.tracks.length){status('Load a melodic stem first.');return}state.capturing=!state.capturing;$('capture').textContent=state.capturing?'■ Stop capture':'● Start capture';$('capture').classList.toggle('warn',state.capturing);status(state.capturing?'Capturing a rough note draft during playback. Solo the selected stem to hear it clearly.':'Capture paused. Your MIDI note draft remains.')}
 function download(name,blob){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000)}
 function slug(s){return s.replace(/[^a-z0-9]+/gi,'_').replace(/^_|_$/g,'').slice(0,42)}
@@ -123,10 +133,138 @@ function csv(){const rows=['stem,start_seconds,end_seconds,midi_note,note_name,c
 function vlq(n){n=Math.max(0,Math.floor(n));const bytes=[n&0x7f];for(n>>=7;n;n>>=7)bytes.unshift((n&0x7f)|0x80);return bytes}
 function word(n){return[(n>>8)&255,n&255]};function dword(n){return[(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255]}
 function midi(){if(!state.notes.length){status('Capture some notes first; MIDI would otherwise be empty.');return}const events=[];for(const n of state.notes){const start=Math.floor(n.start*960),end=Math.max(start+20,Math.floor(n.end*960));events.push([start,[0x90,n.midi,Math.max(42,Math.min(110,Math.round(n.confidence*110)))]]);events.push([end,[0x80,n.midi,0]])}events.sort((a,b)=>a[0]-b[0]||a[1][0]-b[1][0]);const data=[0,0xff,0x51,3,7,161,32];let prev=0;for(const [tick,event] of events){data.push(...vlq(tick-prev),...event);prev=tick}data.push(0,0xff,0x2f,0);const bytes=new Uint8Array([...Array.from('MThd').map(x=>x.charCodeAt(0)),...dword(6),...word(0),...word(1),...word(480),...Array.from('MTrk').map(x=>x.charCodeAt(0)),...dword(data.length),...data]);download(slug($('project').value)+'_estimated_melody.mid',new Blob([bytes],{type:'audio/midi'}));status(`Exported ${state.notes.length} estimated note events. Check and correct them before treating this as an accurate transcription.`)}
-function save(){const output={version:'0.3',created:new Date().toISOString(),song:$('project').value,master:+$('master').value,tracks:state.tracks.map(x=>({name:x.name,group:x.group,volume:x.volume,mute:x.mute,solo:x.solo,duration:x.duration})),notes:state.notes,warning:'Audio not contained; import original stem files when reopening. MIDI is only a rough monophonic draft.'};download(slug($('project').value)+'_phoenix_workmap.json',new Blob([JSON.stringify(output,null,2)],{type:'application/json'}));status('Saved recovery work map (settings and MIDI drafts, not audio files).')}
+function save(){const output={version:'0.4',created:new Date().toISOString(),song:$('project').value,master:+$('master').value,tracks:state.tracks.map(x=>({name:x.name,group:x.group,volume:x.volume,mute:x.mute,solo:x.solo,duration:x.duration})),notes:state.notes,warning:'Audio not contained; import original stem files when reopening. MIDI is only a rough monophonic draft.'};download(slug($('project').value)+'_phoenix_workmap.json',new Blob([JSON.stringify(output,null,2)],{type:'application/json'}));status('Saved recovery work map (settings and MIDI drafts, not audio files).')}
 function clear(){state.notes=[];$('count').textContent='0';renderNotes();status('Cleared rough note draft. Source audio untouched.');}
 function reset(){state.autoUntil=null;state.capturing=false;state.playing=false;for(const t of [...state.tracks])removeTrack(t.id);state.notes=[];setPlay();renderNotes();$('count').textContent='0';status('Audio removed from mixer. Your files on iPhone have not been modified.')}
-$('load').onclick=()=>{status('Choose the actual .mp3 or .m4a stem in Files, not the .zip archive.');$('files').click()};$('quick').onclick=quickAnalyze;$('files').onchange=e=>{const chosen=[...e.target.files];status('Selected '+chosen.length+' file(s). Loading tracks…');try{addFiles(chosen)}catch(err){status('⚠ Import error: '+err.message)}e.target.value=''};
+
+// ZIP browser: central-directory indexing, lazy data extraction. No network and no libraries.
+// Supports ZIP methods 0 (stored) and 8 (DEFLATE) using browser-native DecompressionStream.
+const SUNO_SETS = [
+ {match:'Heartbreak Taught Me Heaven Stems.zip',code:'HTMH-590EAD52',title:'Heartbreak Taught Me Heaven',stems:10},
+ {match:'Where My Light Comes From (Remastered) Stems.zip',code:'WMLR-05D46236',title:'Where My Light Comes From — Remastered',stems:12},
+ {match:'Right Side of the Light Stems 4.zip',code:'RSOL-0AEF8B3E',title:'Right Side of the Light',stems:9},
+ {match:'Chosen for the Weight Stems 5.zip',code:'CFTW-A935EFC5',title:'Chosen for the Weight',stems:8},
+ {match:'Where My Light Comes From Stems 2.zip',code:'WML-C2BDCAB0',title:'Where My Light Comes From — Regular (duplicate download)',stems:12},
+ {match:'The Fire Made Me Shine Stems.zip',code:'TFMS-AB67B2BC',title:'The Fire Made Me Shine',stems:10},
+ {match:'Where My Light Comes From Stems.zip',code:'WML-C2BDCAB0',title:'Where My Light Comes From — Regular',stems:12},
+ {match:'Where My Light Comes From (Smooth Country-Rap Violin Answer Mix) Stems.zip',code:'WMLV-CF290472',title:'Where My Light Comes From — Smooth Country-Rap Violin Answer Mix',stems:12}
+];
+let pendingZip=null, loadedSet=null, midiArchive=null;
+const shortName=s=>s.split('/').filter(Boolean).pop()||s;
+const n16=(v,o)=>v.getUint16(o,true), n32=(v,o)=>v.getUint32(o,true);
+async function bytesOf(b){return new Uint8Array(await b.arrayBuffer())}
+async function scanZip(blob){
+ if(blob.size<22)throw Error('Not a valid ZIP file');
+ const tailSize=Math.min(blob.size,65557);
+ const tail=await bytesOf(blob.slice(blob.size-tailSize));
+ const dv=new DataView(tail.buffer,tail.byteOffset,tail.byteLength);
+ let eocd=-1;for(let p=tail.length-22;p>=0;p--){if(n32(dv,p)===0x06054b50&&p+22+n16(dv,p+20)<=tail.length){eocd=p;break}}
+ if(eocd<0)throw Error('Cannot find ZIP directory. Is this a complete ZIP?');
+ const total=n16(dv,eocd+10),cdSize=n32(dv,eocd+12),cdOffset=n32(dv,eocd+16);
+ if(total===65535||cdOffset===0xffffffff||cdSize===0xffffffff)throw Error('ZIP64 not yet supported. Use a song-specific ZIP.');
+ if(cdSize>32*1024*1024||cdOffset+cdSize>blob.size)throw Error('Invalid or unusually large ZIP directory');
+ const dirs=await bytesOf(blob.slice(cdOffset,cdOffset+cdSize));const view=new DataView(dirs.buffer,dirs.byteOffset,dirs.byteLength);
+ let p=0;const entries=[];const decode=new TextDecoder('utf-8',{fatal:false});
+ for(let i=0;i<total;i++){
+  if(p+46>dirs.length||n32(view,p)!==0x02014b50)throw Error('Broken ZIP directory at entry '+(i+1));
+  const method=n16(view,p+10),comp=n32(view,p+20),uncomp=n32(view,p+24),fn=n16(view,p+28),ex=n16(view,p+30),co=n16(view,p+32),offset=n32(view,p+42);
+  if(p+46+fn+ex+co>dirs.length)throw Error('Truncated filename in ZIP');
+  const name=decode.decode(dirs.subarray(p+46,p+46+fn));
+  if(!name.endsWith('/'))entries.push({name,method,comp,uncomp,offset});
+  p+=46+fn+ex+co;
+ }
+ return {blob,entries};
+}
+async function extractEntry(archive,entry){
+ if(entry.uncomp>512*1024*1024)throw Error('ZIP entry exceeds 512 MB safety limit');
+ const h=await bytesOf(archive.blob.slice(entry.offset,entry.offset+30));
+ if(h.length<30||new DataView(h.buffer,h.byteOffset,h.byteLength).getUint32(0,true)!==0x04034b50)throw Error('Invalid local ZIP entry: '+entry.name);
+ const view=new DataView(h.buffer,h.byteOffset,h.byteLength),headLen=30+n16(view,26)+n16(view,28);
+ const body=archive.blob.slice(entry.offset+headLen,entry.offset+headLen+entry.comp);
+ let result;
+ if(entry.method===0)result=body;
+ else if(entry.method===8){
+  if(!window.DecompressionStream)throw Error('Browser does not support ZIP decompression; update Safari/iOS');
+  result=await new Response(body.stream().pipeThrough(new DecompressionStream('deflate-raw'))).blob();
+ } else throw Error('Unsupported ZIP compression method '+entry.method);
+ if(result.size!==entry.uncomp)throw Error('ZIP size verification failed on '+entry.name);
+ return result;
+}
+function matchSet(filename){return SUNO_SETS.find(x=>x.match===shortName(filename))||null}
+function projectFor(set){return set?.title||'New unnamed recording'}
+function pickProjectTitle(title){const sel=$('project');let op=[...sel.options].find(x=>x.textContent===title);if(!op){op=document.createElement('option');op.textContent=title;sel.append(op)}sel.value=title}
+function zipLog(s){$('zipProgress').textContent=s;status(s)}
+async function chooseStemZip(file){
+ if(!file)return;
+ pendingZip=null;$('loadZip').disabled=true;$('zipChoice').disabled=true;$('zipChoice').textContent='';
+ zipLog('Indexing '+file.name+' ('+(file.size/1048576).toFixed(1)+' MB)… only the directory is read.');
+ try{
+  const arch=await scanZip(file),inner=arch.entries.filter(x=>/\.zip$/i.test(x.name));
+  let options=[];
+  if(inner.length){options=inner.map((e,i)=>({label:(matchSet(e.name)?.title||shortName(e.name))+' · '+Math.round(e.uncomp/1048576)+' MB',entry:e,index:i}));}
+  else if(arch.entries.some(x=>/\.(mp3|m4a|wav|aac|ogg)$/i.test(x.name))){options=[{label:matchSet(file.name)?.title||file.name,archive:arch}];}
+  else throw Error('No nested song ZIPs or audio stems found. Is this the Suno stem archive?');
+  pendingZip={archive:arch,options};
+  options.forEach((x,i)=>{const op=document.createElement('option');op.value=String(i);op.textContent=x.label;$('zipChoice').append(op)});
+  $('zipChoice').disabled=false;$('loadZip').disabled=false;
+  $('zipInfo').textContent=options.length+' recording archive(s)';
+  zipLog('✓ Found '+options.length+' song ZIP(s). Choose one version, then tap Load chosen stems.');
+ }catch(err){zipLog('⚠ ZIP open error: '+err.message)}
+}
+async function loadZipSong(){
+ if(!pendingZip)return;
+ const item=pendingZip.options[+$('zipChoice').value];if(!item)return;
+ $('loadZip').disabled=true;
+ try{
+  let arch=item.archive, filename=pendingZip.archive.blob.name;
+  if(item.entry){zipLog('Opening '+shortName(item.entry.name)+'…');const sub=await extractEntry(pendingZip.archive,item.entry);arch=await scanZip(sub);filename=shortName(item.entry.name)}
+  const audio=arch.entries.filter(x=>/\.(mp3|wav|m4a|aac|ogg)$/i.test(x.name)&&!x.name.startsWith('__MACOSX/')&&!shortName(x.name).startsWith('._'));
+  if(!audio.length)throw Error('No playable audio files found inside this song ZIP');
+  if(audio.length>24)throw Error('Too many audio tracks for this phone ('+audio.length+'). Choose one 12-stem song ZIP.');
+  const bytes=audio.reduce((n,e)=>n+e.uncomp,0);if(bytes>180*1048576)throw Error('This version needs over 180 MB of extracted audio. Try the desktop or a smaller ZIP.');
+  zipLog('Found '+audio.length+' stems ('+(bytes/1048576).toFixed(1)+' MB). Extracting only this selected song…');
+  // Clear only the current mixer session. We never delete or modify source files.
+  reset();const files=[];
+  for(let i=0;i<audio.length;i++){
+   const e=audio[i];$('zipProgress').textContent='Extracting '+(i+1)+'/'+audio.length+': '+shortName(e.name);
+   await new Promise(requestAnimationFrame);
+   const blob=await extractEntry(arch,e);
+   const mime=/\.mp3$/i.test(e.name)?'audio/mpeg':/\.m4a$/i.test(e.name)?'audio/mp4':/\.wav$/i.test(e.name)?'audio/wav':'audio/ogg';
+   files.push(new File([blob],shortName(e.name),{type:mime}));
+  }
+  const set=matchSet(filename);loadedSet=set?set.code:filename;pickProjectTitle(projectFor(set));
+  addFiles(files);renderMidiDrafts();
+  zipLog('✓ '+files.length+' Suno stems loaded: '+(set?.title||filename)+'. Originals untouched. Tap ▶ to play or solo tracks.');
+ }catch(err){zipLog('⚠ Failed to load stems: '+err.message)}
+ finally{$('loadZip').disabled=false}
+}
+async function chooseMidiZip(file){
+ if(!file)return;try{
+  const archive=await scanZip(file),midis=archive.entries.filter(x=>/\.mid(i)?$/i.test(x.name));
+  if(!midis.length)throw Error('No .mid files found');
+  midiArchive=archive;renderMidiDrafts();$('midiDetails').open=true;
+  zipLog('✓ Indexed '+midis.length+' MIDI drafts. Open Matching MIDI drafts to download your chosen parts.');
+ }catch(e){zipLog('⚠ MIDI ZIP error: '+e.message)}
+}
+function renderMidiDrafts(){
+ const root=$('midiList');root.textContent='';if(!midiArchive){root.textContent='Choose Song_Stems_Compared_and_MIDI_Drafts(1).zip to browse version-matched MIDI.';return}
+ const all=midiArchive.entries.filter(x=>/\.mid(i)?$/i.test(x.name));
+ const match=loadedSet?all.filter(x=>x.name.split('/')[0].startsWith(loadedSet)):all;
+ $('midiCount').textContent='('+match.length+(loadedSet?' matching':' total')+')';
+ if(!match.length){root.textContent='No matching MIDI for this stem version. Do not borrow MIDI from a different version.';return}
+ const intro=document.createElement('p');intro.textContent='MIDI drafts are estimated, not note-perfect. Tap to download an individual MIDI; your audio stays untouched.';root.append(intro);
+ for(const ent of match){
+  const b=document.createElement('button');b.className='btn subtle';b.style.cssText='width:100%;text-align:left;margin-top:5px;font-size:11px;min-height:35px;overflow-wrap:anywhere';b.textContent='↓ '+shortName(ent.name);
+  b.onclick=async()=>{try{zipLog('Exporting '+shortName(ent.name)+'…');const blob=await extractEntry(midiArchive,ent);download(shortName(ent.name),new Blob([blob],{type:'audio/midi'}));zipLog('✓ MIDI ready: '+shortName(ent.name));}catch(e){zipLog('⚠ '+e.message)}};root.append(b);
+ }
+}
+$('pickZip').onclick=()=>$('zipInput').click();
+$('pickMidiZip').onclick=()=>$('midiZipInput').click();
+$('zipInput').onchange=async e=>{await chooseStemZip(e.target.files?.[0]);e.target.value=''};
+$('midiZipInput').onchange=async e=>{await chooseMidiZip(e.target.files?.[0]);e.target.value=''};
+$('loadZip').onclick=loadZipSong;
+
+$('load').onclick=()=>{status('Choose audio files here, or use Choose Suno ZIP above to import all matching stems.');$('files').click()};$('quick').onclick=quickAnalyze;$('files').onchange=e=>{const chosen=[...e.target.files];status('Selected '+chosen.length+' file(s). Loading tracks…');try{addFiles(chosen)}catch(err){status('⚠ Import error: '+err.message)}e.target.value=''};
 $('play').onclick=togglePlay;$('seek').oninput=e=>seek(+e.target.value);$('master').oninput=e=>{if(ctx)master.gain.value=+e.target.value};$('loop').onclick=()=>{state.loop=!state.loop;$('loop').textContent=state.loop?'Loop on':'Loop off';$('loop').classList.toggle('on',state.loop)};
 for(const btn of document.querySelectorAll('.tab'))btn.onclick=()=>showTab(btn.dataset.tab);
 $('capture').onclick=captureToggle;$('exportMidi').onclick=midi;$('exportCsv').onclick=csv;$('save').onclick=save;$('clear').onclick=clear;$('reset').onclick=reset;
