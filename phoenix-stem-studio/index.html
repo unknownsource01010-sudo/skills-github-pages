@@ -13,7 +13,7 @@ header{padding:max(21px,env(safe-area-inset-top)) 18px 13px;display:flex;align-i
 </style>
 </head>
 <body>
-<header><div class="mark" aria-hidden="true">♬</div><div><div class="brand">PHOENIX STEM STUDIO</div><div class="sub">RECOVER THE GROOVE · iPHONE EDITION</div></div><span class="badge">v0.5.9 · ONE-TAP FIX</span></header>
+<header><div class="mark" aria-hidden="true">♬</div><div><div class="brand">PHOENIX STEM STUDIO</div><div class="sub">RECOVER THE GROOVE · iPHONE EDITION</div></div><span class="badge">v0.6.0 · 12 PROFILES</span></header>
 <main>
 <section class="panel"><div class="eyebrow">Your music · No cloud uploads</div><div class="heading">Preserve every instrument</div><p class="muted"><b>Quick start:</b> Tap <b>Choose Suno ZIP</b> → pick your song/version → <b>Load chosen stems</b>. You can use the big nested <b>stem.zip</b> or a single song ZIP. The original audio stays on your phone. MIDI previews are separate and approximate.</p>
 <div class="panel" id="detailedPanel" style="margin:9px 0;padding:12px;background:#0c2032;border-color:#326b7d">
@@ -44,7 +44,7 @@ header{padding:max(21px,env(safe-area-inset-top)) 18px 13px;display:flex;align-i
 <label class="small" for="project">Song / recording</label><select class="project" id="project">
 <option>Song A · Remastered</option><option>Song A · Version 4</option><option>Song B · Version 3</option><option>Song B · Version 2</option><option>Song C · Original</option><option>Song C · Versions 2/3</option><option>Song D</option><option>Song E</option><option>Song F</option><option>New unnamed recording</option>
 </select><div class="two" style="margin-top:11px"><button class="btn primary" id="load">＋ Import audio stem</button><button class="btn primary" id="quick">▶ Analyze 25 seconds</button></div><input id="files" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.aiff,.aif,.flac" multiple>
-<p class="small"><button class="btn subtle" id="save" style="width:100%">↓ Save work map</button></p><p class="file-help small">Use the ZIP importer for your Suno 8–12 stem categories. The direct audio importer still works. Detailed ZIPs allow selected import. Large ZIP imports may require free phone storage/memory; process one song version at a time. Nothing is uploaded.</p><div id="status" class="log" role="status" aria-live="polite">v0.5.9 ready. Six detectors run in one real-time pass. The second pass reviews disagreements; chords/layers still require 53-stem separation.</div></section>
+<p class="small"><button class="btn subtle" id="save" style="width:100%">↓ Save work map</button></p><p class="file-help small">Use the ZIP importer for your Suno 8–12 stem categories. The direct audio importer still works. Detailed ZIPs allow selected import. Large ZIP imports may require free phone storage/memory; process one song version at a time. Nothing is uploaded.</p><div id="status" class="log" role="status" aria-live="polite">v0.6.0 ready. Twelve targeted pitch profiles run together with one tap, then automatic disagreement review. Chords and layers need source separation.</div></section>
 <section class="panel"><div class="eyebrow">Mix desk</div><div class="transport"><button id="play" class="btn primary" aria-label="Play or pause">▶</button><input id="seek" class="seek" type="range" min="0" max="100" value="0" step="0.01" aria-label="Song position"><span id="time" class="timer">0:00 / 0:00</span></div>
 <div class="two"><div><label class="small">Master level</label><input type="range" id="master" min="0" max="1.5" step="0.01" value="0.8"></div><div><label class="small">Loop section</label><button id="loop" class="btn subtle" style="width:100%">Loop off</button></div></div>
 <section class="panel" id="comparePanel" style="margin:14px 0;padding:13px;background:#10283b;border-color:#33758d">
@@ -74,23 +74,23 @@ header{padding:max(21px,env(safe-area-inset-top)) 18px 13px;display:flex;align-i
 <div class="two" style="margin-top:9px"><button id="exportCsv" class="btn subtle">↓ Export note CSV</button><button id="clear" class="btn warn">Clear note draft</button></div>
 <div class="note-list" id="noteList"></div>
 <section class="panel" id="multiPanel" style="background:#102838;border-color:#438aa0;padding:13px;margin-top:13px">
- <div class="eyebrow">NEW · 6 settings at once · one song playback</div>
+ <div class="eyebrow">NEW · up to 12 profiles · one song playback</div>
  <div class="heading" style="font-size:17px">Parallel note recovery</div>
- <p class="small">One playback runs Soft 6×, 10×, 14× and Faint 12×, 16×, 19× over a <b>shared pitch analysis</b> (no six simultaneous audio decodes). It merges repeated pitches and marks disagreement. A second <b>automatic, targeted</b> audio pass checks only disagreement regions using spectral evidence. Every result remains a candidate, not a verified violin note.</p>
- <div class="two"><div><label class="small" for="multiLength">First pass</label><select class="project" id="multiLength"><option value="full" selected>Entire song · real time</option><option value="25">25-second trial</option><option value="60">60-second trial</option></select></div><div><label class="small" for="multiProfile">Profiles</label><select class="project" id="multiProfile" disabled><option>Six fixed Soft/Faint profiles</option></select></div></div>
- <div class="two" style="margin-top:10px"><button class="btn primary" id="multiStart">▶ Pass 1 · Capture six</button><button class="btn subtle" id="multiReview" disabled>◉ Pass 2 · Review disagreements</button></div>
+ <p class="small">One tap runs <b>12 different Soft/Faint profiles</b> during the same song playback: the original six, plus six pitch-range and held-note variants. All share one YIN audio frame analysis, so the phone does not decode the track twelve times. Pass 2 automatically checks disagreements. Profiles are correlated, and extra detections are candidates—not confirmed notes.</p>
+ <div class="two"><div><label class="small" for="multiLength">First pass</label><select class="project" id="multiLength"><option value="full" selected>Entire song · real time</option><option value="25">25-second trial</option><option value="60">60-second trial</option></select></div><div><label class="small" for="multiProfile">Profiles</label><select class="project" id="multiProfile"><option value="expanded" selected>12 · Expanded (default)</option><option value="classic">6 · Original comparison</option></select></div></div>
+ <div class="two" style="margin-top:10px"><button class="btn primary" id="multiStart">▶ Pass 1 · Capture 12</button><button class="btn subtle" id="multiReview" disabled>◉ Pass 2 · Review disagreements</button></div>
  <label class="small" style="display:flex;align-items:center;gap:9px;margin-top:10px;line-height:1.35">
  <input type="checkbox" id="autoReview" checked style="width:19px;height:19px;flex:none;accent-color:#5ee5f4">
- <span><b>Automatically run Pass 2</b> when Pass 1 finishes. One tap starts all six profiles, then checks disagreements. If iOS blocks automatic replay, Pass 2 unlocks for a manual tap.</span></label>
+ <span><b>Automatically run Pass 2</b> when Pass 1 finishes. One tap starts every selected profile, then checks disagreements. If iOS blocks automatic replay, Pass 2 unlocks for a manual tap.</span></label>
  <p class="small" id="workflowState" role="status" aria-live="polite" style="border:1px solid #3c6074;background:#0b1e2e;border-radius:9px;padding:9px;margin:9px 0 0">1 · Load audio → 2 · Tap Pass 1 → 3 · Wait for results → 4 · Export</p>
  <div id="multiStatus" class="small" style="padding:10px 0" role="status" aria-live="polite">Load one Strings stem, select it above, and start. Keep the iPhone screen awake during real-time analysis.</div>
- <div class="two"><button class="btn subtle" id="multiMidi" disabled>↓ Combined 3-track MIDI</button><button class="btn subtle" id="multiCsv" disabled>↓ Detailed review CSV</button></div>
- <p class="small" id="multiCounts">No parallel analysis yet. The normal Capture notes and Export MIDI buttons above remain available for single-setting experiments.</p>
- <p class="caution">Profile agreement is <b>not independent proof</b> because the six profiles share one detector. Spectral evidence can also support an overtone or another instrument. No chords or overlapping violin lines are separated in this version.</p>
+ <div class="two"><button class="btn subtle" id="multiMidi" disabled>↓ Combined 3-lane MIDI</button><button class="btn subtle" id="multiCsv" disabled>↓ Detailed review CSV</button></div>
+ <p class="small" id="multiCounts">No parallel analysis yet. 12-profile mode is the default; switch to the original 6 for a controlled comparison. Normal single-setting Capture remains available.</p>
+ <p class="caution">Profile agreement is <b>not independent proof</b> because all profiles share one underlying pitch detector. Spectral evidence can also support an overtone or another instrument. No chords or overlapping violin lines are separated in this version.</p>
 </section><div class="caution">This is an on-device rough monophonic estimator, not StemForge's full AI audio-to-MIDI model. Don't replace a beautiful violin or banjo performance with these notes until you've checked them against your originals.</div></div>
 </section>
 <section class="panel"><div class="eyebrow">Recovery first</div><div class="heading">Our song reconstruction rules</div><p class="muted">Keep the original full recordings and lossless FLAC exports as masters. These stem files are separated reference audio, not newly performed instruments. The goal is to recover actual notes, swing, articulations, riffs, fills and timing before independently rebuilding any part.</p><div class="two"><button id="restore" class="btn subtle">↑ Load work map</button><button id="reset" class="btn warn">Clear loaded audio</button></div><input type="file" id="session" accept=".json,application/json"><p class="small">A saved work map stores song title, stem names, level settings and transcribed MIDI note drafts, but not your audio. Import the stems again after reopening.</p></section>
-</main><footer>PHOENIX STEM STUDIO v0.5.6 · Independently created iPhone browser tool · Not affiliated with the upstream StemForge project. Audio stays local.</footer>
+</main><footer>PHOENIX STEM STUDIO v0.6.0 · Independently created iPhone browser tool · Not affiliated with the upstream StemForge project. Audio stays local.</footer>
 <script>
 (()=>{'use strict';
 const $=id=>document.getElementById(id), state={tracks:[],playing:false,loop:false,capturing:false,autoUntil:null,notes:[],sessionName:null}, colors={vocals:'#f6bb76',drums:'#b48af3',bass:'#71dca0',guitar:'#4cc7e6',piano:'#ed86bf',other:'#e4e996'};
@@ -223,27 +223,39 @@ function captureFrame(){const selected=state.tracks.find(t=>t.id===$('analyze').
  }
  lastCaptureSongTime=t;lastCaptureSongTrack=selected.id;
  const p=estimatePitch(selected.analyzer);if(!p){$('pitch').textContent='—';$('hz').textContent=pitchReason;$('detectorStatus').textContent='Detector: '+pitchReason+'. Hearing a note does not guarantee it is isolated enough to transcribe.';return}$('pitch').textContent=notename(p.midi);$('hz').textContent=`${p.hz.toFixed(1)} Hz · ${Math.round(p.confidence*100)}%`;if(!state.playing)return;const prior=state.notes[state.notes.length-1],begin=Math.max(0,t-.075);if(prior&&prior.track===selected.name&&prior.midi===p.midi&&begin-prior.end<.21){prior.end=Math.max(prior.end,t+.06);prior.confidence=Math.max(prior.confidence,p.confidence)}else if(prior&&prior.track===selected.name&&begin-prior.end<.14&&prior.midi!==p.midi){prior.end=Math.max(prior.start+.025,Math.min(prior.end,begin));state.notes.push({start:begin,end:t+.06,midi:p.midi,confidence:p.confidence,track:selected.name})}else state.notes.push({start:begin,end:t+.06,midi:p.midi,confidence:p.confidence,track:selected.name});$('count').textContent=state.notes.length;if(state.notes.length%6===0)renderNotes()}
-// Parallel note recovery v0.5.9: six configurations share ONE normalized
-// YIN difference function per frame. The analysis runs entirely in this browser.
+// Parallel note recovery v0.6.0: 6 baseline + 6 complementary configurations
+// share ONE normalized YIN difference function per frame. All remains local.
 const MULTI_PROFILES=[
+ // Original six, unchanged for A/B comparison to previously saved sessions.
  {id:'Soft 6x',mode:'soft',boost:6,rms:.0018,limit:.16,method:'first'},
  {id:'Soft 10x',mode:'soft',boost:10,rms:.0018,limit:.14,method:'first'},
  {id:'Soft 14x',mode:'soft',boost:14,rms:.0018,limit:.18,method:'deepest'},
  {id:'Faint 12x',mode:'faint',boost:12,rms:.00055,limit:.11,method:'first'},
  {id:'Faint 16x',mode:'faint',boost:16,rms:.00055,limit:.13,method:'deepest'},
- {id:'Faint 19x',mode:'faint',boost:19,rms:.00055,limit:.17,method:'first'}
+ {id:'Faint 19x',mode:'faint',boost:19,rms:.00055,limit:.17,method:'first'},
+ // Complementary register searches and note stability checks; correlated evidence.
+ {id:'Soft 5x upper stable',mode:'soft',boost:5,rms:.0018,limit:.12,method:'first',minHz:175,maxHz:1080,minFrames:3},
+ {id:'Soft 8x low stable',mode:'soft',boost:8,rms:.0018,limit:.15,method:'deepest',minHz:55,maxHz:360,minFrames:3},
+ {id:'Soft 12x held',mode:'soft',boost:12,rms:.0018,limit:.14,method:'first',minFrames:4},
+ {id:'Faint 9x upper',mode:'faint',boost:9,rms:.00055,limit:.10,method:'deepest',minHz:190,maxHz:1050,minFrames:3},
+ {id:'Faint 15x low',mode:'faint',boost:15,rms:.00055,limit:.12,method:'first',minHz:50,maxHz:420,minFrames:3},
+ {id:'Faint 19x held',mode:'faint',boost:19,rms:.00055,limit:.13,method:'deepest',minFrames:4}
 ];
+function chosenMultiProfiles(){return $('multiProfile').value==='classic'?MULTI_PROFILES.slice(0,6):MULTI_PROFILES;}
+function profileCountLabel(){return (state.multi?.mode==='capture'?state.multi.profiles.length:chosenMultiProfiles().length);}
+
 function setMultiButtons(){const m=state.multi;
  const mode=m?.mode||'empty',capturing=mode==='capture',reviewing=mode==='review',hasNotes=!!m?.merged?.length;
- $('multiStart').textContent=capturing?'■ Finish Pass 1 now':'▶ Pass 1 · Capture six';
+ $('multiStart').textContent=capturing?'■ Finish Pass 1 now':'▶ Pass 1 · Capture '+profileCountLabel();
+ $('multiProfile').disabled=capturing||reviewing;
  $('multiReview').disabled=!hasNotes||capturing||reviewing;
  $('multiMidi').disabled=!hasNotes; $('multiCsv').disabled=!hasNotes;
  $('multiReview').textContent=reviewing?'◉ Pass 2 running…':'◉ Pass 2 · Review disagreements';
- const stateText=capturing?'PASS 1 RUNNING · All six Soft/Faint profiles are active. Pass 2 and exports unlock afterward. Tap Finish to end early.':
+ const stateText=capturing?'PASS 1 RUNNING · '+m.profiles.length+' targeted Soft/Faint profiles are active. Pass 2 and exports unlock afterward. Tap Finish to end early.':
  reviewing?'PASS 2 RUNNING · Checking disagreements. Export becomes available when note candidates exist.':
  hasNotes?'READY TO EXPORT · MIDI and CSV buttons are unlocked. Pass 2 can also be run again.':
  mode==='error'?'PLAYBACK ERROR · Check the message below, then tap Pass 1 to retry.':
- 'READY · Import one stem, then tap Pass 1. All six profiles start automatically.';
+ 'READY · Import one stem, then tap Pass 1. All '+chosenMultiProfiles().length+' profiles start automatically.';
  $('workflowState').textContent=stateText;
 }
 
@@ -269,11 +281,15 @@ function multiPitchFrame(analyzer){
 function pitchForProfile(frame,config){
  if(!frame||frame.rms<config.rms/config.boost)return null;
  const {norm,minTau,maxTau,sr}=frame;let tau=0;
+ // Restrict selected profiles to low or upper registers using the SAME YIN curve.
+ const firstTau=Math.max(minTau,Math.ceil(sr/(config.maxHz||1100)));
+ const lastTau=Math.min(maxTau-1,Math.floor(sr/(config.minHz||48)));
+ if(lastTau<=firstTau)return null;
  if(config.method==='deepest'){
    let best=Infinity;
-   for(let t=minTau;t<maxTau-1;t++)if(norm[t]<config.limit&&norm[t]<best){tau=t;best=norm[t]}
+   for(let t=firstTau;t<=lastTau;t++)if(norm[t]<config.limit&&norm[t]<best){tau=t;best=norm[t]}
  }else{
-   for(let t=minTau;t<maxTau-1;t++)if(norm[t]<config.limit){tau=t;while(tau+1<maxTau&&norm[tau+1]<norm[tau])tau++;break}
+   for(let t=firstTau;t<=lastTau;t++)if(norm[t]<config.limit){tau=t;while(tau+1<=lastTau&&norm[tau+1]<norm[tau])tau++;break}
  }
  if(!tau)return null;
  const before=norm[tau-1],center=norm[tau],after=norm[tau+1];
@@ -286,12 +302,15 @@ function pitchForProfile(frame,config){
 function recordProfilePitch(profile,p,t,trackName){
  const last=profile.candidate;
  if(!p){if(last&&t-last.t>.25)profile.candidate=null;return}
- if(last&&last.midi===p.midi&&t-last.t>=.025&&t-last.t<.30){
+ const same=last&&last.midi===p.midi&&t-last.t>=.025&&t-last.t<.30;
+ const seen=same?(last.seen||1)+1:1;
+ const onset=same?(last.firstT??last.t):t;
+ if(same&&seen>=(profile.minFrames||2)){
   const end=t+.055;let note=profile.notes[profile.notes.length-1];
   if(note&&note.midi===p.midi&&t-note.end<.30){note.end=Math.max(note.end,end);note.confidence=Math.max(note.confidence,p.confidence)}
-  else profile.notes.push({start:Math.max(0,last.t-.05),end,midi:p.midi,confidence:p.confidence,track:trackName,profile:profile.id});
+  else profile.notes.push({start:Math.max(0,onset-.035),end,midi:p.midi,confidence:p.confidence,track:trackName,profile:profile.id});
  }
- profile.candidate={midi:p.midi,t};
+ profile.candidate={midi:p.midi,t,seen,firstT:onset};
 }
 function captureMultiFrame(){const m=state.multi;
  if(!m||m.mode!=='capture'||!m.song||!state.playing)return;
@@ -307,7 +326,7 @@ function captureMultiFrame(){const m=state.multi;
  m.frames++;
  if(m.frames%9===0){const counts=m.profiles.map(p=>p.notes.length);
   $('multiStatus').textContent='Pass 1 / '+format(m.until)+' · '+format(t)+' elapsed · '+m.frames+' shared frames · '+counts.join(' / ')+' note candidates per profile';
-  $('multiCounts').textContent=MULTI_PROFILES.map((p,i)=>p.id+': '+counts[i]).join(' · ');
+  $('multiCounts').textContent=m.profiles.map((p,i)=>p.id+': '+counts[i]).join(' · ');
  }
 }
 function mergeParallelNotes(profiles){
@@ -373,9 +392,9 @@ function startMultiPass(){
   const len=$('multiLength').value;
   const max=Number.isFinite(song.el.duration)&&song.el.duration>0?song.el.duration:399;
   const until=len==='full'?max:Math.min(max,Number(len)||25);
-  state.multi={mode:'capture',song,until,lastTime:-1,frames:0,merged:[],profiles:MULTI_PROFILES.map(p=>({...p,notes:[],candidate:null}))};
+  state.multi={mode:'capture',song,until,lastTime:-1,frames:0,merged:[],profiles:chosenMultiProfiles().map(p=>({...p,notes:[],candidate:null}))};
   setMultiButtons();showTab('notes');
-  $('multiStatus').textContent='▶ Pass 1: all SIX Soft/Faint profiles started together · '+format(until)+' of audio. '+($('autoReview').checked?'Pass 2 will start automatically.':'Tap Pass 2 after capture.')+' Keep this iPhone awake.';
+  $('multiStatus').textContent='▶ Pass 1: all '+state.multi.profiles.length+' Soft/Faint profiles started together · '+format(until)+' of audio. '+($('autoReview').checked?'Pass 2 will start automatically.':'Tap Pass 2 after capture.')+' Keep this iPhone awake.';
   $('multiCounts').textContent='Listening to '+song.name+' · original audio unchanged.';
   togglePlay().then(()=>{if(state.multi?.mode==='capture'&&!state.playing){$('multiStatus').textContent='⚠ Playback blocked. Tap Pass 1 again after pressing Play.';state.multi.mode='error';setMultiButtons()}});
  }catch(e){$('multiStatus').textContent='⚠ Cannot start parallel detector: '+e.message;state.multi=null;setMultiButtons()}
@@ -492,7 +511,7 @@ function csv(){const rows=['stem,start_seconds,end_seconds,midi_note,note_name,c
 function vlq(n){n=Math.max(0,Math.floor(n));const bytes=[n&0x7f];for(n>>=7;n;n>>=7)bytes.unshift((n&0x7f)|0x80);return bytes}
 function word(n){return[(n>>8)&255,n&255]};function dword(n){return[(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255]}
 function midi(){if(!state.notes.length){status('Capture some notes first; MIDI would otherwise be empty.');return}const events=[];let skipped=0;for(const n of state.notes){if(n.end-n.start<.025){skipped++;continue;}const start=Math.floor(n.start*960),end=Math.max(start+20,Math.floor(n.end*960));events.push([start,[0x90,n.midi,Math.max(42,Math.min(110,Math.round(n.confidence*110)))]]);events.push([end,[0x80,n.midi,0]])}events.sort((a,b)=>a[0]-b[0]||a[1][0]-b[1][0]);const data=[0,0xff,0x51,3,7,161,32];let prev=0;for(const [tick,event] of events){data.push(...vlq(tick-prev),...event);prev=tick}data.push(0,0xff,0x2f,0);if(!events.length){status('No usable MIDI notes (all were shorter than 25 milliseconds).');return}const bytes=new Uint8Array([...Array.from('MThd').map(x=>x.charCodeAt(0)),...dword(6),...word(0),...word(1),...word(480),...Array.from('MTrk').map(x=>x.charCodeAt(0)),...dword(data.length),...data]);download(slug($('project').value)+'_estimated_melody.mid',new Blob([bytes],{type:'audio/midi'}));status(`Exported ${state.notes.length-skipped} estimated MIDI note events. Skipped ${skipped} zero/tiny notes. This does not transcribe chords or layered violin.`)}
-function save(){const output={version:'0.5.8',created:new Date().toISOString(),song:$('project').value,master:+$('master').value,tracks:state.tracks.map(x=>({name:x.name,group:x.group,volume:x.volume,mute:x.mute,solo:x.solo,duration:x.duration})),notes:state.notes,parallel:state.multi?.merged||null,parallelRaw:state.multi?.profiles?.map(p=>({profile:p.id,notes:p.notes}))||null,warning:'Audio not contained; import original stem files when reopening. MIDI is only a rough monophonic draft.'};download(slug($('project').value)+'_phoenix_workmap.json',new Blob([JSON.stringify(output,null,2)],{type:'application/json'}));status('Saved recovery work map (settings and MIDI drafts, not audio files).')}
+function save(){const output={version:'0.6.0',created:new Date().toISOString(),song:$('project').value,master:+$('master').value,tracks:state.tracks.map(x=>({name:x.name,group:x.group,volume:x.volume,mute:x.mute,solo:x.solo,duration:x.duration})),notes:state.notes,parallel:state.multi?.merged||null,parallelRaw:state.multi?.profiles?.map(p=>({profile:p.id,notes:p.notes}))||null,warning:'Audio not contained; import original stem files when reopening. MIDI is only a rough monophonic draft.'};download(slug($('project').value)+'_phoenix_workmap.json',new Blob([JSON.stringify(output,null,2)],{type:'application/json'}));status('Saved recovery work map (settings and MIDI drafts, not audio files).')}
 function clear(){state.notes=[];resetCaptureClock();$('count').textContent='0';renderNotes();status('Cleared rough note draft. Source audio untouched.');}
 function reset(){state.multi=null;setMultiButtons();state.autoUntil=null;state.capturing=false;state.playing=false;resetCaptureClock();for(const t of [...state.tracks])removeTrack(t.id);state.notes=[];setPlay();renderNotes();$('count').textContent='0';status('Audio removed from mixer. Your files on iPhone have not been modified.')}
 
@@ -688,7 +707,7 @@ async function loadDetailedTracks(){
   const chosen=state.tracks.find(t=>/violin|fiddle|strings?/i.test(t.name))||state.tracks.find(t=>/guitar|other|keys/i.test(t.name))||state.tracks[0];
   if(chosen)$('analyze').value=chosen.id;
   $('multiPanel').scrollIntoView({behavior:'smooth',block:'start'});
-  detailStatus('✓ Loaded '+files.length+' audio stem(s). Scrolled to one-tap Pass 1; all six detector profiles will start together. Original ZIP unchanged.');
+  detailStatus('✓ Loaded '+files.length+' audio stem(s). Scrolled to one-tap Pass 1; all '+chosenMultiProfiles().length+' detector profiles will start together. Original ZIP unchanged.');
  }catch(err){detailStatus('⚠ Detailed stem load failed: '+err.message)}
  finally{refreshDetailed()}
 }
@@ -716,7 +735,7 @@ $('loadZip').onclick=loadZipSong;
 $('load').onclick=()=>{status('Choose audio files here, or use Choose Suno ZIP above to import all matching stems.');$('files').click()};$('quick').onclick=quickAnalyze;$('files').onchange=e=>{const chosen=[...e.target.files];status('Selected '+chosen.length+' file(s). Loading tracks…');try{addFiles(chosen)}catch(err){status('⚠ Import error: '+err.message)}e.target.value=''};
 $('play').onclick=togglePlay;$('seek').oninput=e=>{if(state.multi?.mode==='capture'||state.multi?.mode==='review'){$('multiStatus').textContent='Manual seeking during a pass is disabled to protect note timing.';return}seek(+e.target.value)};$('master').oninput=e=>{if(ctx)master.gain.value=+e.target.value};$('loop').onclick=()=>{state.loop=!state.loop;$('loop').textContent=state.loop?'Loop on':'Loop off';$('loop').classList.toggle('on',state.loop)};
 for(const btn of document.querySelectorAll('.tab'))btn.onclick=()=>showTab(btn.dataset.tab);
-$('multiStart').onclick=()=>startMultiPass();$('multiReview').onclick=()=>startReviewPass(false);$('multiMidi').onclick=exportMultiMidi;$('multiCsv').onclick=exportMultiCsv;setMultiButtons();$('capture').onclick=captureToggle;$('exportMidi').onclick=midi;$('exportCsv').onclick=csv;$('save').onclick=save;$('clear').onclick=clear;$('reset').onclick=reset;
+$('multiProfile').onchange=()=>setMultiButtons();$('multiStart').onclick=()=>startMultiPass();$('multiReview').onclick=()=>startReviewPass(false);$('multiMidi').onclick=exportMultiMidi;$('multiCsv').onclick=exportMultiCsv;setMultiButtons();$('capture').onclick=captureToggle;$('exportMidi').onclick=midi;$('exportCsv').onclick=csv;$('save').onclick=save;$('clear').onclick=clear;$('reset').onclick=reset;
 $('restore').onclick=()=>$('session').click();$('session').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{const j=JSON.parse(await f.text());if(!Array.isArray(j.notes))throw new Error('Invalid work map');$('project').value=j.song||$('project').value;state.notes=j.notes.filter(n=>Number.isFinite(n.midi)&&Number.isFinite(n.start)&&Number.isFinite(n.end));$('count').textContent=state.notes.length;renderNotes();status('Recovered '+state.notes.length+' note drafts. Re-import original stem audio to hear your recording.')}catch(err){status('Cannot load map: '+err.message)}e.target.value=''};
 window.addEventListener('pagehide',()=>{if(state.playing)state.tracks.forEach(t=>t.el.pause());state.playing=false;setPlay()});raf=requestAnimationFrame(tick);
 })();
