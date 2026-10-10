@@ -13,7 +13,7 @@ header{padding:max(21px,env(safe-area-inset-top)) 18px 13px;display:flex;align-i
 </style>
 </head>
 <body>
-<header><div class="mark" aria-hidden="true">♬</div><div><div class="brand">PHOENIX STEM STUDIO</div><div class="sub">RECOVER THE GROOVE · iPHONE EDITION</div></div><span class="badge">v0.6.0 · 12 PROFILES</span></header>
+<header><div class="mark" aria-hidden="true">♬</div><div><div class="brand">PHOENIX STEM STUDIO</div><div class="sub">RECOVER THE GROOVE · iPHONE EDITION</div></div><span class="badge">v0.6.1 · SPECTRAL SCOUT</span></header>
 <main>
 <section class="panel"><div class="eyebrow">Your music · No cloud uploads</div><div class="heading">Preserve every instrument</div><p class="muted"><b>Quick start:</b> Tap <b>Choose Suno ZIP</b> → pick your song/version → <b>Load chosen stems</b>. You can use the big nested <b>stem.zip</b> or a single song ZIP. The original audio stays on your phone. MIDI previews are separate and approximate.</p>
 <div class="panel" id="detailedPanel" style="margin:9px 0;padding:12px;background:#0c2032;border-color:#326b7d">
@@ -44,7 +44,7 @@ header{padding:max(21px,env(safe-area-inset-top)) 18px 13px;display:flex;align-i
 <label class="small" for="project">Song / recording</label><select class="project" id="project">
 <option>Song A · Remastered</option><option>Song A · Version 4</option><option>Song B · Version 3</option><option>Song B · Version 2</option><option>Song C · Original</option><option>Song C · Versions 2/3</option><option>Song D</option><option>Song E</option><option>Song F</option><option>New unnamed recording</option>
 </select><div class="two" style="margin-top:11px"><button class="btn primary" id="load">＋ Import audio stem</button><button class="btn primary" id="quick">▶ Analyze 25 seconds</button></div><input id="files" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.aiff,.aif,.flac" multiple>
-<p class="small"><button class="btn subtle" id="save" style="width:100%">↓ Save work map</button></p><p class="file-help small">Use the ZIP importer for your Suno 8–12 stem categories. The direct audio importer still works. Detailed ZIPs allow selected import. Large ZIP imports may require free phone storage/memory; process one song version at a time. Nothing is uploaded.</p><div id="status" class="log" role="status" aria-live="polite">v0.6.0 ready. Twelve targeted pitch profiles run together with one tap, then automatic disagreement review. Chords and layers need source separation.</div></section>
+<p class="small"><button class="btn subtle" id="save" style="width:100%">↓ Save work map</button></p><p class="file-help small">Use the ZIP importer for your Suno 8–12 stem categories. The direct audio importer still works. Detailed ZIPs allow selected import. Large ZIP imports may require free phone storage/memory; process one song version at a time. Nothing is uploaded.</p><div id="status" class="log" role="status" aria-live="polite">v0.6.1 ready. One tap runs 12 Soft/Faint profiles plus a different harmonic-pitch scout; speculative extra notes export in their own track. Original audio untouched.</div></section>
 <section class="panel"><div class="eyebrow">Mix desk</div><div class="transport"><button id="play" class="btn primary" aria-label="Play or pause">▶</button><input id="seek" class="seek" type="range" min="0" max="100" value="0" step="0.01" aria-label="Song position"><span id="time" class="timer">0:00 / 0:00</span></div>
 <div class="two"><div><label class="small">Master level</label><input type="range" id="master" min="0" max="1.5" step="0.01" value="0.8"></div><div><label class="small">Loop section</label><button id="loop" class="btn subtle" style="width:100%">Loop off</button></div></div>
 <section class="panel" id="comparePanel" style="margin:14px 0;padding:13px;background:#10283b;border-color:#33758d">
@@ -76,7 +76,7 @@ header{padding:max(21px,env(safe-area-inset-top)) 18px 13px;display:flex;align-i
 <section class="panel" id="multiPanel" style="background:#102838;border-color:#438aa0;padding:13px;margin-top:13px">
  <div class="eyebrow">NEW · up to 12 profiles · one song playback</div>
  <div class="heading" style="font-size:17px">Parallel note recovery</div>
- <p class="small">One tap runs <b>12 different Soft/Faint profiles</b> during the same song playback: the original six, plus six pitch-range and held-note variants. All share one YIN audio frame analysis, so the phone does not decode the track twelve times. Pass 2 automatically checks disagreements. Profiles are correlated, and extra detections are candidates—not confirmed notes.</p>
+ <p class="small">One tap runs <b>12 Soft/Faint profiles plus a separate harmonic-frequency scout</b> on the same playback. The scout searches for persistent upper-range pitches that monophonic YIN may miss and exports them separately, without declaring them real notes. Pass 2 reviews YIN disagreements; harmonic-scout suggestions are <b>unverified</b> and may be chord harmonics or bleed from other instruments.</p>
  <div class="two"><div><label class="small" for="multiLength">First pass</label><select class="project" id="multiLength"><option value="full" selected>Entire song · real time</option><option value="25">25-second trial</option><option value="60">60-second trial</option></select></div><div><label class="small" for="multiProfile">Profiles</label><select class="project" id="multiProfile"><option value="expanded" selected>12 · Expanded (default)</option><option value="classic">6 · Original comparison</option></select></div></div>
  <div class="two" style="margin-top:10px"><button class="btn primary" id="multiStart">▶ Pass 1 · Capture 12</button><button class="btn subtle" id="multiReview" disabled>◉ Pass 2 · Review disagreements</button></div>
  <label class="small" style="display:flex;align-items:center;gap:9px;margin-top:10px;line-height:1.35">
@@ -84,13 +84,13 @@ header{padding:max(21px,env(safe-area-inset-top)) 18px 13px;display:flex;align-i
  <span><b>Automatically run Pass 2</b> when Pass 1 finishes. One tap starts every selected profile, then checks disagreements. If iOS blocks automatic replay, Pass 2 unlocks for a manual tap.</span></label>
  <p class="small" id="workflowState" role="status" aria-live="polite" style="border:1px solid #3c6074;background:#0b1e2e;border-radius:9px;padding:9px;margin:9px 0 0">1 · Load audio → 2 · Tap Pass 1 → 3 · Wait for results → 4 · Export</p>
  <div id="multiStatus" class="small" style="padding:10px 0" role="status" aria-live="polite">Load one Strings stem, select it above, and start. Keep the iPhone screen awake during real-time analysis.</div>
- <div class="two"><button class="btn subtle" id="multiMidi" disabled>↓ Combined 3-lane MIDI</button><button class="btn subtle" id="multiCsv" disabled>↓ Detailed review CSV</button></div>
- <p class="small" id="multiCounts">No parallel analysis yet. 12-profile mode is the default; switch to the original 6 for a controlled comparison. Normal single-setting Capture remains available.</p>
- <p class="caution">Profile agreement is <b>not independent proof</b> because all profiles share one underlying pitch detector. Spectral evidence can also support an overtone or another instrument. No chords or overlapping violin lines are separated in this version.</p>
+ <div class="two"><button class="btn subtle" id="multiMidi" disabled>↓ MIDI · 4 lanes incl. scout</button><button class="btn subtle" id="multiCsv" disabled>↓ MIDI + scout review CSV</button></div>
+ <p class="small" id="multiCounts">No results yet. Pass 1 runs 12 Soft/Faint settings and a separate harmonic scout in one playback; keep speculative suggestions separate.</p>
+ <p class="caution">The 12 YIN profiles share one underlying detector. The spectral scout uses a different frequency-domain test, but <b>its extra pitches may be overtones, chords, or other instruments</b>. No notes are promoted to verified without auditioning them or better source separation.</p>
 </section><div class="caution">This is an on-device rough monophonic estimator, not StemForge's full AI audio-to-MIDI model. Don't replace a beautiful violin or banjo performance with these notes until you've checked them against your originals.</div></div>
 </section>
 <section class="panel"><div class="eyebrow">Recovery first</div><div class="heading">Our song reconstruction rules</div><p class="muted">Keep the original full recordings and lossless FLAC exports as masters. These stem files are separated reference audio, not newly performed instruments. The goal is to recover actual notes, swing, articulations, riffs, fills and timing before independently rebuilding any part.</p><div class="two"><button id="restore" class="btn subtle">↑ Load work map</button><button id="reset" class="btn warn">Clear loaded audio</button></div><input type="file" id="session" accept=".json,application/json"><p class="small">A saved work map stores song title, stem names, level settings and transcribed MIDI note drafts, but not your audio. Import the stems again after reopening.</p></section>
-</main><footer>PHOENIX STEM STUDIO v0.6.0 · Independently created iPhone browser tool · Not affiliated with the upstream StemForge project. Audio stays local.</footer>
+</main><footer>PHOENIX STEM STUDIO v0.6.1 · Independently created iPhone browser tool · Not affiliated with the upstream StemForge project. Audio stays local.</footer>
 <script>
 (()=>{'use strict';
 const $=id=>document.getElementById(id), state={tracks:[],playing:false,loop:false,capturing:false,autoUntil:null,notes:[],sessionName:null}, colors={vocals:'#f6bb76',drums:'#b48af3',bass:'#71dca0',guitar:'#4cc7e6',piano:'#ed86bf',other:'#e4e996'};
@@ -299,6 +299,79 @@ function pitchForProfile(frame,config){
  if(!Number.isFinite(hz)||hz<48||hz>1100||midi<24||midi>94)return null;
  return {midi,hz,confidence:Math.max(0,Math.min(1,1-center))};
 }
+// Independent harmonic-frequency scout (NOT a polyphonic ground-truth model).
+// It only proposes persistent pitched spectral peaks; every extra goes to a
+// separate MIDI track. It never changes the YIN baseline or its profile counts.
+const SCOUT_LOW=53,SCOUT_HIGH=88; // F3..E6 approx; lower fundamentals need better FFT resolution.
+function harmonicScoutFrame(analyser,rms){
+ if(!ctx||rms<.00055)return [];
+ const fft=new Float32Array(analyser.frequencyBinCount);
+ analyser.getFloatFrequencyData(fft);
+ const hzBin=ctx.sampleRate/analyser.fftSize,scored=[];
+ function prominence(hz){
+  const center=Math.round(hz/hzBin);if(center<5||center+10>=fft.length)return null;
+  const at=Math.max(fft[center-1],fft[center],fft[center+1]);
+  let ambient=0,count=0;
+  for(let k=-9;k<=9;k++){
+   if(k>=-3&&k<=3)continue;
+   const b=fft[center+k];if(Number.isFinite(b)){ambient+=b;count++}
+  }
+  return count?{contrast:at-ambient/count,db:at}:null;
+ }
+ for(let midi=SCOUT_LOW;midi<=SCOUT_HIGH;midi++){
+  const hz=440*Math.pow(2,(midi-69)/12);
+  const one=prominence(hz),two=prominence(2*hz),three=prominence(3*hz);
+  if(!one||!two||!three||one.db < -93 || one.contrast<6.5)continue;
+  // At least one overtone must independently be above neighboring bins.
+  if(two.contrast<5.5&&three.contrast<6.5)continue;
+  const score=one.contrast+Math.max(0,two.contrast)*.33+Math.max(0,three.contrast)*.20;
+  if(score>=11)scored.push({midi,score});
+ }
+ scored.sort((a,b)=>b.score-a.score);
+ return scored.slice(0,4); // cap per frame to protect the phone and report size
+}
+function recordHarmonicScout(m,peaks,t){
+ const present=new Set(peaks.map(p=>p.midi));
+ for(const [key,track] of m.scoutActive){
+  if(!present.has(key)&&t-track.last>.28)m.scoutActive.delete(key);
+ }
+ for(const note of peaks){
+  const prev=m.scoutActive.get(note.midi);
+  const continuous=prev&&t-prev.last>=.03&&t-prev.last<.32;
+  const count=continuous?prev.count+1:1;
+  const first=continuous?prev.first:t;
+  const prior=m.scoutNotes[m.scoutNotes.length-1];
+  // Only record candidates sustained across >=3 advancing frames.
+  if(count>=3){
+   const recent=m.scoutNotes.slice(-8).reverse().find(x=>x.midi===note.midi&&t-x.end<.3&&t-x.end>-.15);
+   if(recent){recent.end=Math.max(recent.end,t+.055);recent.score=Math.max(recent.score,note.score)}
+   else m.scoutNotes.push({start:first,end:t+.055,midi:note.midi,score:note.score,profile:'Harmonic scout',confidence:Math.min(1,note.score/32)});
+  }
+  m.scoutActive.set(note.midi,{first,last:t,count});
+ }
+}
+function finalizeSpectralExtras(m){
+ const candidates=m.scoutNotes.filter(n=>n.end-n.start>=.24).sort((a,b)=>a.start-b.start);
+ const groups=[];
+ for(const n of candidates){
+  const prev=groups.length?groups[groups.length-1]:null;
+  // Consolidate only same-note overlapping scout intervals; unrelated notes remain distinct.
+  const prevSame=groups.slice(-12).reverse().find(x=>x.midi===n.midi&&n.start-x.end<=.19&&n.start-x.end>=-.5);
+  if(prevSame){prevSame.end=Math.max(prevSame.end,n.end);prevSame.score=Math.max(prevSame.score,n.score)}
+  else groups.push({...n});
+ }
+ // Never count a harmonic suggestion as 'new' if YIN already heard this pitch nearby.
+ return groups.filter(n=>!m.merged.some(g=>g.midi===n.midi&&
+  (Math.min(n.end,g.end)-Math.max(n.start,g.start)>.08||Math.abs(n.start-g.start)<.16)))
+  .map(n=>{const shadow=m.merged.some(g=>{const semitones=n.midi-g.midi;
+    const noteOverlap=Math.min(n.end,g.end)-Math.max(n.start,g.start);
+    // Harmonics 2..8 of a lower simultaneous fundamental, rounded to MIDI.
+    return [12,19,24,28,31,34,36].includes(semitones)&&noteOverlap>.12;
+  });
+  return {...n,tier:'spectral',profiles:['Independent harmonic scout'],avgConfidence:n.confidence,
+          harmonicShadow:shadow,spectralSamples:0,spectralHits:0,conflict:false};
+ });
+}
 function recordProfilePitch(profile,p,t,trackName){
  const last=profile.candidate;
  if(!p){if(last&&t-last.t>.25)profile.candidate=null;return}
@@ -319,10 +392,12 @@ function captureMultiFrame(){const m=state.multi;
  if(m.lastTime>=0&&t-m.lastTime<.035)return; // iPhone stall guard
  if(m.lastTime>=0&&(t<m.lastTime-.03||t-m.lastTime>1)){
   for(const p of m.profiles)p.candidate=null;
+  m.scoutActive.clear();
  }
  m.lastTime=t;
  const frame=multiPitchFrame(m.song.analyzer);if(!frame)return;
  for(const p of m.profiles)recordProfilePitch(p,pitchForProfile(frame,p),t,m.song.name);
+ if(m.frames%2===0)recordHarmonicScout(m,harmonicScoutFrame(m.song.analyzer,frame.rms),t);
  m.frames++;
  if(m.frames%9===0){const counts=m.profiles.map(p=>p.notes.length);
   $('multiStatus').textContent='Pass 1 / '+format(m.until)+' · '+format(t)+' elapsed · '+m.frames+' shared frames · '+counts.join(' / ')+' note candidates per profile';
@@ -376,7 +451,7 @@ function drawMultiSummary(){const m=state.multi;
  const cnt={matched:0,single:0,conflict:0};m.merged.forEach(n=>cnt[n.tier]++);
  const review=m.merged.filter(n=>n.tier!=='matched').length;
  const proven=m.merged.filter(n=>n.spectralSamples>0&&n.spectralHits/n.spectralSamples>=.45).length;
- $('multiCounts').textContent=m.merged.length+' distinct candidate notes · '+cnt.matched+' multi-profile matches · '+cnt.single+' single-profile · '+cnt.conflict+' overlapping pitch conflicts · '+review+' review targets'+(m.reviewed?' · '+proven+' with spectral support (NOT verified notes)':'');
+ $('multiCounts').textContent=m.merged.length+' YIN candidates · '+cnt.matched+' multi-profile · '+cnt.single+' single-profile · '+cnt.conflict+' conflicts · '+(m.scoutExtras?.length||0)+' EXTRA speculative pitches ('+(m.scoutExtras||[]).filter(n=>n.harmonicShadow).length+' harmonic-shadow warnings) in their own lane · '+review+' review targets'+(m.reviewed?' · '+proven+' with spectral support (NOT verified notes)':'');
  $('count').textContent=m.merged.length;
 }
 function startMultiPass(){
@@ -392,7 +467,7 @@ function startMultiPass(){
   const len=$('multiLength').value;
   const max=Number.isFinite(song.el.duration)&&song.el.duration>0?song.el.duration:399;
   const until=len==='full'?max:Math.min(max,Number(len)||25);
-  state.multi={mode:'capture',song,until,lastTime:-1,frames:0,merged:[],profiles:chosenMultiProfiles().map(p=>({...p,notes:[],candidate:null}))};
+  state.multi={mode:'capture',song,until,lastTime:-1,frames:0,merged:[],scoutNotes:[],scoutExtras:[],scoutActive:new Map(),profiles:chosenMultiProfiles().map(p=>({...p,notes:[],candidate:null}))};
   setMultiButtons();showTab('notes');
   $('multiStatus').textContent='▶ Pass 1: all '+state.multi.profiles.length+' Soft/Faint profiles started together · '+format(until)+' of audio. '+($('autoReview').checked?'Pass 2 will start automatically.':'Tap Pass 2 after capture.')+' Keep this iPhone awake.';
   $('multiCounts').textContent='Listening to '+song.name+' · original audio unchanged.';
@@ -402,9 +477,9 @@ function startMultiPass(){
 function finishMultiPass(early=false){const m=state.multi;
  if(!m||m.mode!=='capture')return;
  const keepPlaying=!early&&$('autoReview').checked&&state.playing&&!m.song.el.paused;
- m.merged=mergeParallelNotes(m.profiles);m.mode='ready';m.early=early;
+ m.merged=mergeParallelNotes(m.profiles);m.scoutExtras=finalizeSpectralExtras(m);m.mode='ready';m.early=early;
  drawMultiSummary();setMultiButtons();
- $('multiStatus').textContent='✓ Pass 1 '+(early?'stopped early':'finished')+': '+m.merged.length+' merged note candidates from '+m.frames+' shared frames. '+(keepPlaying?'Starting disagreement review without stopping audio…':'Pass 2 and exports are available if notes were found.');
+ $('multiStatus').textContent='✓ Pass 1 '+(early?'stopped early':'finished')+': '+m.merged.length+' YIN candidates + '+m.scoutExtras.length+' separate speculative harmonic pitches from '+m.frames+' shared frames. '+(keepPlaying?'Starting disagreement review without stopping audio…':'Pass 2 and exports are available if notes were found.');
  if(keepPlaying && m.merged.length){startReviewPass(true);return}
  if(state.playing){state.tracks.forEach(t=>t.el.pause());state.playing=false;setPlay()}
 }
@@ -475,7 +550,7 @@ function nextReviewWindow(){const m=state.multi;if(m?.mode!=='review')return;
 function multiMidiTrack(name,notes,channel){
  const bytes=new TextEncoder().encode(name);const events=[[0,[255,3,bytes.length,...bytes]]];
  for(const n of notes){const start=Math.round(n.start*960),end=Math.max(start+28,Math.round(n.end*960));
-  const velocity=Math.min(110,Math.max(48,Math.round(n.avgConfidence*98)));
+  const velocity=n.tier==='spectral'?52:Math.min(110,Math.max(48,Math.round(n.avgConfidence*98))); // spectral confidence is NOT note certainty
   events.push([start,[0x90|channel,n.midi,velocity]],[end,[0x80|channel,n.midi,0]])
  }
  events.sort((a,b)=>a[0]-b[0]||((a[1][0]&0xf0)===0x80?-1:1));
@@ -486,20 +561,20 @@ function multiMidiTrack(name,notes,channel){
 function exportMultiMidi(){const m=state.multi;if(!m?.merged?.length)return;
  const tempo=[0,255,81,3,7,161,32,0,255,47,0];
  const chunks=[new Uint8Array([...Array.from('MTrk').map(x=>x.charCodeAt(0)),...dword(tempo.length),...tempo])];
- const tiers=[['Matched profiles','matched'],['Single-profile candidates','single'],['Overlapping conflicts','conflict']];
- for(let i=0;i<tiers.length;i++)chunks.push(multiMidiTrack(tiers[i][0],m.merged.filter(g=>g.tier===tiers[i][1]),i));
+ const tiers=[['Matched profiles','matched'],['Single-profile candidates','single'],['Overlapping conflicts','conflict'],['Spectral scout - unverified','spectral']];
+ for(let i=0;i<tiers.length;i++)chunks.push(multiMidiTrack(tiers[i][0],(i===3?m.scoutExtras:m.merged).filter(g=>g.tier===tiers[i][1]),i));
  const head=new Uint8Array([...Array.from('MThd').map(x=>x.charCodeAt(0)),...dword(6),...word(1),...word(chunks.length),...word(480)]);
- download(slug($('project').value)+'_PARALLEL_3lanes.mid',new Blob([head,...chunks],{type:'audio/midi'}));
- $('multiStatus').textContent='✓ Exported synchronized 3-lane MIDI with '+m.merged.length+' candidates. Matched/Single/Conflict tracks stay separate.';
+ download(slug($('project').value)+'_PARALLEL_4lanes_scout_unverified.mid',new Blob([head,...chunks],{type:'audio/midi'}));
+ $('multiStatus').textContent='✓ Exported 4-lane MIDI: '+m.merged.length+' YIN candidates, '+(m.scoutExtras?.length||0)+' unverified harmonic-scout extras in their own track (low MIDI velocity; risk flags in CSV).' ;
 }
 function exportMultiCsv(){const m=state.multi;if(!m?.merged?.length)return;
  const q=s=>JSON.stringify(String(s));
- const rows=['start_s,end_s,midi,note,category,profile_count,profiles,yin_estimated_confidence,spectral_frames,spectral_hits,spectral_support_ratio,warning'];
- for(const g of m.merged){const ratio=g.spectralSamples?g.spectralHits/g.spectralSamples:null;
- rows.push([g.start.toFixed(3),g.end.toFixed(3),g.midi,q(notename(g.midi)),g.tier,g.profiles.length,q(g.profiles.join(' | ')),g.avgConfidence.toFixed(3),g.spectralSamples,g.spectralHits,ratio===null?'':ratio.toFixed(3),q(g.conflict?'May be layered notes or pitch confusion':g.tier==='single'?'Only one detector profile':'Correlated-profile agreement; verify by ear')].join(','));
+ const rows=['start_s,end_s,midi,note,category,profile_count,profiles,yin_estimated_confidence,spectral_frames,spectral_hits,spectral_support_ratio,warning,harmonic_shadow_risk'];
+ for(const g of [...m.merged,...(m.scoutExtras||[])]){const ratio=g.spectralSamples?g.spectralHits/g.spectralSamples:null;
+ rows.push([g.start.toFixed(3),g.end.toFixed(3),g.midi,q(notename(g.midi)),g.tier,g.profiles.length,q(g.profiles.join(' | ')),(g.tier==='spectral'?'':g.avgConfidence.toFixed(3)),g.spectralSamples,g.spectralHits,ratio===null?'':ratio.toFixed(3),q(g.tier==='spectral'?'INDEPENDENT FREQUENCY GUESS ONLY: may be an overtone, chord, bleed, or wrong note':g.conflict?'May be layered notes or pitch confusion':g.tier==='single'?'Only one detector profile':'Correlated-profile agreement; verify by ear'),g.harmonicShadow?'YES - harmonic of a lower overlapping YIN note':''].join(','));
  }
- download(slug($('project').value)+'_PARALLEL_audio_review.csv',new Blob([rows.join('\n')],{type:'text/csv'}));
- $('multiStatus').textContent='✓ Exported '+m.merged.length+' original-time note candidates with profile names and evidence (not certified accuracy).';
+ download(slug($('project').value)+'_PARALLEL_audio_review_plus_scout.csv',new Blob([rows.join('\n')],{type:'text/csv'}));
+ $('multiStatus').textContent='✓ CSV exported: '+m.merged.length+' original YIN candidates and '+(m.scoutExtras?.length||0)+' distinct harmonic-scout suggestions (NOT VERIFIED).';
 }
 
 function renderNotes(){const root=$('noteList');root.textContent='';for(const n of state.notes.slice(-32)){const el=document.createElement('span');el.className='note-chip';el.textContent=`${format(n.start)} ${notename(n.midi)}`;root.append(el)}}
@@ -511,7 +586,7 @@ function csv(){const rows=['stem,start_seconds,end_seconds,midi_note,note_name,c
 function vlq(n){n=Math.max(0,Math.floor(n));const bytes=[n&0x7f];for(n>>=7;n;n>>=7)bytes.unshift((n&0x7f)|0x80);return bytes}
 function word(n){return[(n>>8)&255,n&255]};function dword(n){return[(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255]}
 function midi(){if(!state.notes.length){status('Capture some notes first; MIDI would otherwise be empty.');return}const events=[];let skipped=0;for(const n of state.notes){if(n.end-n.start<.025){skipped++;continue;}const start=Math.floor(n.start*960),end=Math.max(start+20,Math.floor(n.end*960));events.push([start,[0x90,n.midi,Math.max(42,Math.min(110,Math.round(n.confidence*110)))]]);events.push([end,[0x80,n.midi,0]])}events.sort((a,b)=>a[0]-b[0]||a[1][0]-b[1][0]);const data=[0,0xff,0x51,3,7,161,32];let prev=0;for(const [tick,event] of events){data.push(...vlq(tick-prev),...event);prev=tick}data.push(0,0xff,0x2f,0);if(!events.length){status('No usable MIDI notes (all were shorter than 25 milliseconds).');return}const bytes=new Uint8Array([...Array.from('MThd').map(x=>x.charCodeAt(0)),...dword(6),...word(0),...word(1),...word(480),...Array.from('MTrk').map(x=>x.charCodeAt(0)),...dword(data.length),...data]);download(slug($('project').value)+'_estimated_melody.mid',new Blob([bytes],{type:'audio/midi'}));status(`Exported ${state.notes.length-skipped} estimated MIDI note events. Skipped ${skipped} zero/tiny notes. This does not transcribe chords or layered violin.`)}
-function save(){const output={version:'0.6.0',created:new Date().toISOString(),song:$('project').value,master:+$('master').value,tracks:state.tracks.map(x=>({name:x.name,group:x.group,volume:x.volume,mute:x.mute,solo:x.solo,duration:x.duration})),notes:state.notes,parallel:state.multi?.merged||null,parallelRaw:state.multi?.profiles?.map(p=>({profile:p.id,notes:p.notes}))||null,warning:'Audio not contained; import original stem files when reopening. MIDI is only a rough monophonic draft.'};download(slug($('project').value)+'_phoenix_workmap.json',new Blob([JSON.stringify(output,null,2)],{type:'application/json'}));status('Saved recovery work map (settings and MIDI drafts, not audio files).')}
+function save(){const output={version:'0.6.1',created:new Date().toISOString(),song:$('project').value,master:+$('master').value,tracks:state.tracks.map(x=>({name:x.name,group:x.group,volume:x.volume,mute:x.mute,solo:x.solo,duration:x.duration})),notes:state.notes,parallel:state.multi?.merged||null,parallelRaw:state.multi?.profiles?.map(p=>({profile:p.id,notes:p.notes}))||null,spectralScoutUnverified:state.multi?.scoutExtras||null,warning:'Audio not contained; import original stem files when reopening. MIDI is only a rough monophonic draft.'};download(slug($('project').value)+'_phoenix_workmap.json',new Blob([JSON.stringify(output,null,2)],{type:'application/json'}));status('Saved recovery work map (settings and MIDI drafts, not audio files).')}
 function clear(){state.notes=[];resetCaptureClock();$('count').textContent='0';renderNotes();status('Cleared rough note draft. Source audio untouched.');}
 function reset(){state.multi=null;setMultiButtons();state.autoUntil=null;state.capturing=false;state.playing=false;resetCaptureClock();for(const t of [...state.tracks])removeTrack(t.id);state.notes=[];setPlay();renderNotes();$('count').textContent='0';status('Audio removed from mixer. Your files on iPhone have not been modified.')}
 
