@@ -4,18 +4,33 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <meta name="theme-color" content="#0b1120"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Phoenix Stems">
 <link rel="manifest" href="manifest.webmanifest">
-<title>Phoenix Stem Studio · Suno ZIP Import</title>
+<title>Phoenix Stem Studio · Detailed Stem Browser</title>
 <style>
 :root{color-scheme:dark;--bg:#090f1e;--card:#121d2e;--card2:#19263b;--stroke:#293c57;--bright:#5ee5f4;--blue:#3f9fdd;--white:#eef7ff;--muted:#a6bad1;--warn:#f6c570;--good:#74e6b1}
-*{box-sizing:border-box}html{height:100%;background:var(--bg)}body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:radial-gradient(circle at 75% -10%,#14435d 0%,transparent 39%),var(--bg);color:var(--white);margin:0;padding:0 0 env(safe-area-inset-bottom)}button,select,input{font:inherit}button{cursor:pointer;touch-action:manipulation}input[type=range]{accent-color:var(--bright);width:100%}input[type=file]{display:none}
+*{box-sizing:border-box}html{height:100%;background:var(--bg)}body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:radial-gradient(circle at 75% -10%,#14435d 0%,transparent 39%),var(--bg);color:var(--white);margin:0;padding:0 0 env(safe-area-inset-bottom)}button,select,input{font:inherit} #detailedTracks label{display:flex;gap:8px;align-items:center;padding:9px 6px;border-bottom:1px solid #2b4058;font-size:12px} #detailedTracks label:last-child{border-bottom:none} #detailedTracks input{accent-color:var(--bright);width:17px;height:17px;flex:none} #detailedTracks label span{min-width:0;overflow-wrap:anywhere;flex:1} #detailedTracks small{font-size:10px;color:var(--muted);flex:none} #stemSearch{color:var(--white)}button{cursor:pointer;touch-action:manipulation}input[type=range]{accent-color:var(--bright);width:100%}input[type=file]{display:none}
 header{padding:max(21px,env(safe-area-inset-top)) 18px 13px;display:flex;align-items:center;gap:13px;border-bottom:1px solid var(--stroke)}.mark{height:47px;width:47px;display:grid;place-items:center;background:linear-gradient(135deg,#123c5e,#18504e);border:1px solid var(--bright);border-radius:14px;box-shadow:0 0 25px #00a8d044;color:var(--bright);font-size:26px}.brand{font-size:18px;font-weight:800;letter-spacing:1px}.sub{color:var(--muted);font-size:11px;letter-spacing:1.6px;margin-top:3px}.badge{margin-left:auto;font-size:10px;padding:5px 7px;border:1px solid #3b5766;border-radius:7px;color:var(--bright)}main{max-width:760px;padding:14px 12px 32px;margin:auto}.panel{background:linear-gradient(145deg,#131e30,#0d1828);border:1px solid var(--stroke);border-radius:15px;padding:15px;margin:12px 0;box-shadow:0 5px 30px #0002}.eyebrow{color:var(--bright);font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase}.heading{font-size:19px;font-weight:750;margin:5px 0}.muted,.small{font-size:12px;color:var(--muted);line-height:1.5}.small{font-size:11px}.two{display:flex;gap:10px;align-items:center}.two>*{flex:1;min-width:0}.btn{border:1px solid #35617d;background:linear-gradient(#18384e,#152d43);color:var(--white);padding:12px 12px;border-radius:11px;font-weight:700;min-height:43px}.btn:active{transform:translateY(1px)}.btn.primary{background:linear-gradient(135deg,#0877a6,#177d8d);border-color:#2cb6d3}.btn.warn{border-color:#755e3b;background:#332a21}.btn.subtle{background:#1c2a3e;border-color:#32445a}.btn:disabled{opacity:.45}.file-help{margin:8px 0}.project{width:100%;background:#091321;border:1px solid #2b465d;border-radius:9px;color:#f1fbff;padding:10px;margin-top:7px}.transport{display:flex;align-items:center;gap:9px;margin:8px 0}.transport button{width:64px;flex:none}.timer{font-variant-numeric:tabular-nums;font-weight:750;min-width:85px;text-align:right;font-size:12px}.seek{flex:1;min-width:0}.track{background:#101b2b;border:1px solid #283c53;border-radius:12px;margin:8px 0;padding:10px 11px}.track-top{display:flex;align-items:center;gap:9px}.dot{width:9px;height:9px;border-radius:50%;background:var(--blue);flex:none}.dot.vocals{background:#f6bb76}.dot.drums{background:#b48af3}.dot.bass{background:#71dca0}.dot.guitar{background:#4cc7e6}.dot.piano{background:#ed86bf}.dot.other{background:#e4e996}.dot.strings{background:#8ce8c6}.dot.woodwinds{background:#91c3f9}.dot.brass{background:#eeb869}.dot.percussion{background:#f7c87c}.filename{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;font-weight:650}.track-group{font-size:10px;color:var(--muted)}.mute,.solo,.del{border:1px solid #385268;background:#1b2a40;color:var(--white);width:35px;height:31px;border-radius:7px;font-size:11px;font-weight:800}.del{color:#f4acac}.on{background:#007da1!important;border-color:#78edff!important;color:#fff!important}.solo.on{background:#98712a!important;border-color:#ffd382!important}.track-bottom{display:grid;grid-template-columns:1fr 75px;align-items:center;gap:10px;margin-top:8px}.track-level{font-size:11px;color:var(--muted)}.meter{width:100%;height:5px;border-radius:2px;background:#12283e;overflow:hidden;margin-top:7px}.meter i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#3db1e0,#69efd0)}.readout{border:1px solid #355370;background:#0b1726;border-radius:10px;padding:10px;display:flex;align-items:center;justify-content:space-between;gap:7px;margin-top:9px}.note{font-size:29px;color:var(--bright);font-weight:800;letter-spacing:2px}.freq{font-size:11px;color:var(--muted)}.tabs{display:flex;gap:6px;margin:8px 0}.tab{flex:1;padding:11px 6px;border:1px solid #34516b;background:#17283d;color:#abc0d5;font-weight:700;border-radius:9px;font-size:12px}.tab.active{color:#fff;border-color:var(--bright);background:#125271}.hidden{display:none!important}.caution{font-size:11px;color:#f0d49c;background:#312a203d;border:1px solid #6c5a384e;border-radius:8px;padding:9px;margin-top:10px}.log{color:#b6cadc;line-height:1.45;min-height:17px;font-size:12px}.note-list{display:flex;gap:5px;flex-wrap:wrap;margin:8px 0;max-height:106px;overflow:auto}.note-chip{font-size:10px;background:#163347;border:1px solid #356b85;border-radius:5px;padding:4px 6px}.line{height:1px;background:#293c56;margin:13px 0}footer{color:#8ca2b8;text-align:center;font-size:10px;padding:4px 20px 25px}
 @media (min-width:620px){main{padding:20px 22px}.panel{padding:19px}.heading{font-size:21px}}
 </style>
 </head>
 <body>
-<header><div class="mark" aria-hidden="true">♬</div><div><div class="brand">PHOENIX STEM STUDIO</div><div class="sub">RECOVER THE GROOVE · iPHONE EDITION</div></div><span class="badge">v0.4 · ZIP READY</span></header>
+<header><div class="mark" aria-hidden="true">♬</div><div><div class="brand">PHOENIX STEM STUDIO</div><div class="sub">RECOVER THE GROOVE · iPHONE EDITION</div></div><span class="badge">v0.5.1 · 53 STEMS</span></header>
 <main>
 <section class="panel"><div class="eyebrow">Your music · No cloud uploads</div><div class="heading">Preserve every instrument</div><p class="muted"><b>Quick start:</b> Tap <b>Choose Suno ZIP</b> → pick your song/version → <b>Load chosen stems</b>. You can use the big nested <b>stem.zip</b> or a single song ZIP. The original audio stays on your phone. MIDI previews are separate and approximate.</p>
+<div class="panel" id="detailedPanel" style="margin:9px 0;padding:12px;background:#0c2032;border-color:#326b7d">
+<div class="eyebrow">NEW · Up to 53 detailed stems · iPhone companion</div>
+<div class="heading" style="font-size:17px">Find the violin, banjo & more</div>
+<p class="small">Run <a href="https://huggingface.co/spaces/D-r-e/audio-separator" target="_blank" rel="noopener noreferrer" style="color:#79e5ff">Open Stem Studio 53-stem processor ↗</a> on a capable computer or its online demo (when available), then bring its <b>WAV/ZIP export back here</b>. The heavy AI model does <b>not</b> run on an iPhone. Files selected below stay local; using the external demo uploads audio to its service.</p>
+<div class="two"><button class="btn primary" id="pickDetailed">📦 Import detailed stems ZIP</button><button class="btn subtle" id="openSeparator">↗ Open 53-stem processor</button></div>
+<input type="file" id="detailedInput" accept=".zip,application/zip">
+<div class="small" id="detailedState" style="margin-top:9px" role="status" aria-live="polite">Ready to inspect a 53-stem export ZIP; it is indexed before extraction.</div>
+<div id="detailedBrowser" class="hidden">
+<div class="two" style="margin-top:8px"><input id="stemSearch" class="project" placeholder="Search violin, banjo, brass…" aria-label="Filter detailed stem names" style="margin:0;min-width:0"><select id="stemPreset" class="project" aria-label="Quick select stem group" style="margin:0;min-width:0"><option value="none">Pick manually</option><option value="violin">Violin / strings</option><option value="banjo">Banjo / guitars</option><option value="winds">Harmonica / winds</option><option value="rhythm">Rhythm / bass</option><option value="none-reset">Clear selection</option></select></div>
+<p id="detailedSummary" class="small" aria-live="polite"></p>
+<div id="detailedTracks" style="max-height:270px;overflow:auto;border:1px solid #345168;border-radius:10px;padding:6px"></div>
+<div class="two" style="margin-top:9px"><button class="btn primary" id="loadDetailed" disabled>▶ Load selected stems</button><button class="btn subtle" id="downloadDetailed" disabled>↓ Save one selected</button></div>
+<p class="caution">Phone safety limit: up to <b>8 audio tracks</b> and <b>140 MB total extracted audio</b> per loading batch. For full-length WAVs, select only 1–3 tracks. The detailed audio can contain overlapping or missing notes; 53 categories are not 53 verified instruments.</p>
+</div>
+</div>
 <div class="panel" style="margin:9px 0;padding:12px;background:#0d2332;border-color:#286179" id="zipPanel">
 <div class="eyebrow">New · Suno ZIP + MIDI draft browser</div>
 <div class="two" style="margin-top:8px"><button class="btn primary" id="pickZip">📦 Choose Suno ZIP</button><button class="btn subtle" id="pickMidiZip">♫ Choose MIDI ZIP</button></div>
@@ -29,7 +44,7 @@ header{padding:max(21px,env(safe-area-inset-top)) 18px 13px;display:flex;align-i
 <label class="small" for="project">Song / recording</label><select class="project" id="project">
 <option>Song A · Remastered</option><option>Song A · Version 4</option><option>Song B · Version 3</option><option>Song B · Version 2</option><option>Song C · Original</option><option>Song C · Versions 2/3</option><option>Song D</option><option>Song E</option><option>Song F</option><option>New unnamed recording</option>
 </select><div class="two" style="margin-top:11px"><button class="btn primary" id="load">＋ Import audio stem</button><button class="btn primary" id="quick">▶ Analyze 25 seconds</button></div><input id="files" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.aiff,.aif,.flac" multiple>
-<p class="small"><button class="btn subtle" id="save" style="width:100%">↓ Save work map</button></p><p class="file-help small">Use the ZIP importer for your Suno 8–12 stem categories. The direct audio importer still works. Large ZIP imports may require free phone storage/memory; process one song version at a time. Nothing is uploaded.</p><div id="status" class="log" role="status" aria-live="polite">v0.4 ready. Tap Choose Suno ZIP; no need to unzip manually.</div></section>
+<p class="small"><button class="btn subtle" id="save" style="width:100%">↓ Save work map</button></p><p class="file-help small">Use the ZIP importer for your Suno 8–12 stem categories. The direct audio importer still works. Detailed ZIPs allow selected import. Large ZIP imports may require free phone storage/memory; process one song version at a time. Nothing is uploaded.</p><div id="status" class="log" role="status" aria-live="polite">v0.5 ready. Import a Suno ZIP or a 53-stem export ZIP; choose only a few detailed stems at once.</div></section>
 <section class="panel"><div class="eyebrow">Mix desk</div><div class="transport"><button id="play" class="btn primary" aria-label="Play or pause">▶</button><input id="seek" class="seek" type="range" min="0" max="100" value="0" step="0.01" aria-label="Song position"><span id="time" class="timer">0:00 / 0:00</span></div>
 <div class="two"><div><label class="small">Master level</label><input type="range" id="master" min="0" max="1.5" step="0.01" value="0.8"></div><div><label class="small">Loop section</label><button id="loop" class="btn subtle" style="width:100%">Loop off</button></div></div>
 <div class="tabs"><button class="tab active" data-tab="tracks">Individual tracks</button><button class="tab" data-tab="notes">Note recovery</button></div>
@@ -42,7 +57,7 @@ header{padding:max(21px,env(safe-area-inset-top)) 18px 13px;display:flex;align-i
 <div class="note-list" id="noteList"></div><div class="caution">This is an on-device rough monophonic estimator, not StemForge's full AI audio-to-MIDI model. Don't replace a beautiful violin or banjo performance with these notes until you've checked them against your originals.</div></div>
 </section>
 <section class="panel"><div class="eyebrow">Recovery first</div><div class="heading">Our song reconstruction rules</div><p class="muted">Keep the original full recordings and lossless FLAC exports as masters. These stem files are separated reference audio, not newly performed instruments. The goal is to recover actual notes, swing, articulations, riffs, fills and timing before independently rebuilding any part.</p><div class="two"><button id="restore" class="btn subtle">↑ Load work map</button><button id="reset" class="btn warn">Clear loaded audio</button></div><input type="file" id="session" accept=".json,application/json"><p class="small">A saved work map stores song title, stem names, level settings and transcribed MIDI note drafts, but not your audio. Import the stems again after reopening.</p></section>
-</main><footer>PHOENIX STEM STUDIO v0.2 · Independently created iPhone browser tool · Not affiliated with the upstream StemForge project. Audio stays local.</footer>
+</main><footer>PHOENIX STEM STUDIO v0.5.1 · Independently created iPhone browser tool · Not affiliated with the upstream StemForge project. Audio stays local.</footer>
 <script>
 (()=>{'use strict';
 const $=id=>document.getElementById(id), state={tracks:[],playing:false,loop:false,capturing:false,autoUntil:null,notes:[],sessionName:null}, colors={vocals:'#f6bb76',drums:'#b48af3',bass:'#71dca0',guitar:'#4cc7e6',piano:'#ed86bf',other:'#e4e996'};
@@ -57,7 +72,7 @@ const accepted=[];const rejected=[];
 for(const file of files){
  if(/\.zip$/i.test(file.name)){rejected.push(file.name+' is a ZIP: tap it once in iPhone Files to extract it first');continue}
  if(!/^audio\//.test(file.type)&&!/\.(mp3|wav|m4a|aac|aiff?|ogg|flac)$/i.test(file.name)){rejected.push(file.name+' is not audio');continue}
- if(/\.flac$/i.test(file.name)){rejected.push(file.name+' is FLAC: try the iPhone MP3 stem package instead');continue}
+ // FLAC playback depends on browser codec support; allow it and surface an error if unsupported.
  let url,el;
  try{
   url=URL.createObjectURL(file);
@@ -199,7 +214,7 @@ async function chooseStemZip(file){
  pendingZip=null;$('loadZip').disabled=true;$('zipChoice').disabled=true;$('zipChoice').textContent='';
  zipLog('Indexing '+file.name+' ('+(file.size/1048576).toFixed(1)+' MB)… only the directory is read.');
  try{
-  const arch=await scanZip(file),inner=arch.entries.filter(x=>/\.zip$/i.test(x.name));
+  const arch=await scanZip(file),inner=arch.entries.filter(x=>/\.zip$/i.test(x.name)&&!x.name.startsWith('__MACOSX/')&&!shortName(x.name).startsWith('._'));
   let options=[];
   if(inner.length){options=inner.map((e,i)=>({label:(matchSet(e.name)?.title||shortName(e.name))+' · '+Math.round(e.uncomp/1048576)+' MB',entry:e,index:i}));}
   else if(arch.entries.some(x=>/\.(mp3|m4a|wav|aac|ogg)$/i.test(x.name))){options=[{label:matchSet(file.name)?.title||file.name,archive:arch}];}
@@ -258,6 +273,91 @@ function renderMidiDrafts(){
   b.onclick=async()=>{try{zipLog('Exporting '+shortName(ent.name)+'…');const blob=await extractEntry(midiArchive,ent);download(shortName(ent.name),new Blob([blob],{type:'audio/midi'}));zipLog('✓ MIDI ready: '+shortName(ent.name));}catch(e){zipLog('⚠ '+e.message)}};root.append(b);
  }
 }
+
+// DETAILED 53-STEM ZIP BROWSER. Browser is a lightweight companion, not the ML separator.
+// ZIP index is read lazily. Selected files only are decompressed and added to the mixer.
+let detailedArchive=null, detailedEntries=[];
+const detailAudio=e=>/\.(mp3|wav|wave|m4a|aac|ogg|flac)$/i.test(e.name)&&!e.name.startsWith('__MACOSX/')&&!shortName(e.name).startsWith('._');
+const prettyMB=n=>(n/1048576).toFixed(1)+' MB';
+function detailStatus(s){$('detailedState').textContent=s;status(s)}
+function selectedDetailed(){return detailedEntries.filter(e=>e.selected)}
+function refreshDetailed(){
+ const marked=selectedDetailed(), size=marked.reduce((x,e)=>x+e.uncomp,0);
+ $('detailedSummary').textContent=detailedEntries.length+' found · '+marked.length+' selected · '+prettyMB(size)+' expanded · Max 8 files / 140 MB';
+ const valid=marked.length>0 && marked.length<=8 && size<=140*1048576;
+ $('loadDetailed').disabled=!valid;
+ $('downloadDetailed').disabled=marked.length!==1 || size>140*1048576;
+ if(!valid&&marked.length)$('detailedSummary').textContent+=' · ⚠ Reduce selection to fit iPhone';
+}
+function renderDetailed(){
+ const root=$('detailedTracks'), filter=$('stemSearch').value.toLowerCase().trim(); root.textContent='';
+ const matches=detailedEntries.filter(e=>e.name.toLowerCase().includes(filter));
+ matches.forEach(e=>{
+  const label=document.createElement('label');
+  const check=document.createElement('input');check.type='checkbox';check.checked=!!e.selected;
+  check.onchange=()=>{e.selected=check.checked;refreshDetailed()};
+  const title=document.createElement('span');title.textContent=e.name;
+  const sz=document.createElement('small');sz.textContent=prettyMB(e.uncomp);
+  label.append(check,title,sz);root.append(label);
+ });
+ if(!matches.length){const p=document.createElement('p');p.className='small';p.textContent='No instrument names match your filter.';root.append(p)}
+ refreshDetailed();
+}
+async function chooseDetailedZip(file){
+ if(!file)return;detailedArchive=null;detailedEntries=[];$('detailedBrowser').classList.add('hidden');
+ detailStatus('Indexing '+file.name+' ('+prettyMB(file.size)+')…');
+ try{
+  const arch=await scanZip(file), audio=arch.entries.filter(detailAudio);
+  if(!audio.length){
+    if(arch.entries.some(e=>/\.zip$/i.test(e.name)))throw Error('This ZIP contains nested ZIPs. Open the detailed song ZIP directly to avoid unpacking a giant collection on iPhone.');
+    throw Error('No MP3/WAV/M4A/FLAC stems inside this ZIP. Export WAVs or a ZIP from Stem Studio.');
+  }
+  if(audio.length>250)throw Error('Over 250 audio tracks — split the archive into per-song ZIPs.');
+  detailedArchive=arch;
+  detailedEntries=audio.map(e=>({...e,selected:false}));
+  $('detailedBrowser').classList.remove('hidden');
+  $('stemSearch').value='';$('stemPreset').value='none';
+  renderDetailed();
+  detailStatus('✓ Found '+audio.length+' audio stems. Select a few instruments, then load. Your ZIP stays unchanged.');
+ }catch(err){detailStatus('⚠ Detailed ZIP: '+err.message)}
+}
+function setDetailedPreset(p){
+ const re={violin:/violin|fiddle|string|cello|viola|orchestr/i,banjo:/banjo|guitar|acoustic|plucked|mandolin|ukulele/i,winds:/harmonica|mouth.?harp|woodwind|flute|sax|clarinet|oboe|brass|trumpet/i,rhythm:/drum|percussion|bass|snare|kick|cymbal/i}[p];
+ detailedEntries.forEach(e=>{e.selected=!!re&&re.test(e.name)});renderDetailed();
+}
+async function loadDetailedTracks(){
+ const entries=selectedDetailed(); const total=entries.reduce((x,e)=>x+e.uncomp,0);
+ if(!detailedArchive||!entries.length||entries.length>8||total>140*1048576){detailStatus('⚠ Choose 1–8 stems, under 140 MB expanded.');return}
+ $('loadDetailed').disabled=true;const files=[];
+ try{
+  for(const [i,e] of entries.entries()){
+   detailStatus('Extracting detailed stem '+(i+1)+'/'+entries.length+': '+shortName(e.name)+'…');
+   await new Promise(requestAnimationFrame);
+   const blob=await extractEntry(detailedArchive,e);
+   const ext=shortName(e.name).split('.').pop().toLowerCase();
+   const types={mp3:'audio/mpeg',wav:'audio/wav',wave:'audio/wav',m4a:'audio/mp4',aac:'audio/aac',ogg:'audio/ogg',flac:'audio/flac'};
+   files.push(new File([blob],shortName(e.name),{type:types[ext]||'application/octet-stream'}));
+  }
+  reset();loadedSet='UNMATCHED-53';renderMidiDrafts();
+  pickProjectTitle('Detailed stem ZIP · '+detailedArchive.blob.name);
+  addFiles(files);showTab('tracks');
+  detailStatus('✓ Loaded '+files.length+' selected detailed stems. Tap ▶; solo and mute to compare. Original ZIP unchanged.');
+ }catch(err){detailStatus('⚠ Detailed stem load failed: '+err.message)}
+ finally{refreshDetailed()}
+}
+async function saveOneDetailed(){
+ const e=selectedDetailed()[0];if(!e||selectedDetailed().length!==1)return;
+ try{const b=await extractEntry(detailedArchive,e);download(shortName(e.name),b);detailStatus('✓ Saved '+shortName(e.name));}
+ catch(err){detailStatus('⚠ Cannot save: '+err.message)}
+}
+$('pickDetailed').onclick=()=>$('detailedInput').click();
+$('openSeparator').onclick=()=>window.open('https://huggingface.co/spaces/D-r-e/audio-separator','_blank','noopener,noreferrer');
+$('detailedInput').onchange=async e=>{await chooseDetailedZip(e.target.files?.[0]);e.target.value=''};
+$('stemSearch').oninput=renderDetailed;
+$('stemPreset').onchange=e=>setDetailedPreset(e.target.value);
+$('loadDetailed').onclick=loadDetailedTracks;
+$('downloadDetailed').onclick=saveOneDetailed;
+
 $('pickZip').onclick=()=>$('zipInput').click();
 $('pickMidiZip').onclick=()=>$('midiZipInput').click();
 $('zipInput').onchange=async e=>{await chooseStemZip(e.target.files?.[0]);e.target.value=''};
