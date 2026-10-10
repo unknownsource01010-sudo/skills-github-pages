@@ -13,7 +13,7 @@ header{padding:max(21px,env(safe-area-inset-top)) 18px 13px;display:flex;align-i
 </style>
 </head>
 <body>
-<header><div class="mark" aria-hidden="true">♬</div><div><div class="brand">PHOENIX STEM STUDIO</div><div class="sub">RECOVER THE GROOVE · iPHONE EDITION</div></div><span class="badge">v0.5.1 · 53 STEMS</span></header>
+<header><div class="mark" aria-hidden="true">♬</div><div><div class="brand">PHOENIX STEM STUDIO</div><div class="sub">RECOVER THE GROOVE · iPHONE EDITION</div></div><span class="badge">v0.5.2 · 53 STEMS</span></header>
 <main>
 <section class="panel"><div class="eyebrow">Your music · No cloud uploads</div><div class="heading">Preserve every instrument</div><p class="muted"><b>Quick start:</b> Tap <b>Choose Suno ZIP</b> → pick your song/version → <b>Load chosen stems</b>. You can use the big nested <b>stem.zip</b> or a single song ZIP. The original audio stays on your phone. MIDI previews are separate and approximate.</p>
 <div class="panel" id="detailedPanel" style="margin:9px 0;padding:12px;background:#0c2032;border-color:#326b7d">
@@ -300,7 +300,7 @@ function renderDetailed(){
   const sz=document.createElement('small');sz.textContent=prettyMB(e.uncomp);
   label.append(check,title,sz);root.append(label);
  });
- if(!matches.length){const p=document.createElement('p');p.className='small';p.textContent='No instrument names match your filter.';root.append(p)}
+ if(!matches.length){const p=document.createElement('p');p.className='small';p.textContent='No filenames match that search. Clear the search to see every stem. For Suno exports, try Strings instead of violin, or Guitar instead of banjo.';root.append(p)}
  refreshDetailed();
 }
 async function chooseDetailedZip(file){
@@ -323,7 +323,7 @@ async function chooseDetailedZip(file){
 }
 function setDetailedPreset(p){
  const re={violin:/violin|fiddle|string|cello|viola|orchestr/i,banjo:/banjo|guitar|acoustic|plucked|mandolin|ukulele/i,winds:/harmonica|mouth.?harp|woodwind|flute|sax|clarinet|oboe|brass|trumpet/i,rhythm:/drum|percussion|bass|snare|kick|cymbal/i}[p];
- detailedEntries.forEach(e=>{e.selected=!!re&&re.test(e.name)});renderDetailed();
+ detailedEntries.forEach(e=>{e.selected=!!re&&re.test(e.name)});$('stemSearch').value='';renderDetailed();
 }
 async function loadDetailedTracks(){
  const entries=selectedDetailed(); const total=entries.reduce((x,e)=>x+e.uncomp,0);
