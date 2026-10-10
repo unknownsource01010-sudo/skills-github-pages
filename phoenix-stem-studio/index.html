@@ -13,7 +13,7 @@ header{padding:max(21px,env(safe-area-inset-top)) 18px 13px;display:flex;align-i
 </style>
 </head>
 <body>
-<header><div class="mark" aria-hidden="true">♬</div><div><div class="brand">PHOENIX STEM STUDIO</div><div class="sub">RECOVER THE GROOVE · iPHONE EDITION</div></div><span class="badge">v0.5.7 · PARALLEL MIDI</span></header>
+<header><div class="mark" aria-hidden="true">♬</div><div><div class="brand">PHOENIX STEM STUDIO</div><div class="sub">RECOVER THE GROOVE · iPHONE EDITION</div></div><span class="badge">v0.5.8 · MERGE GUARD</span></header>
 <main>
 <section class="panel"><div class="eyebrow">Your music · No cloud uploads</div><div class="heading">Preserve every instrument</div><p class="muted"><b>Quick start:</b> Tap <b>Choose Suno ZIP</b> → pick your song/version → <b>Load chosen stems</b>. You can use the big nested <b>stem.zip</b> or a single song ZIP. The original audio stays on your phone. MIDI previews are separate and approximate.</p>
 <div class="panel" id="detailedPanel" style="margin:9px 0;padding:12px;background:#0c2032;border-color:#326b7d">
@@ -44,7 +44,7 @@ header{padding:max(21px,env(safe-area-inset-top)) 18px 13px;display:flex;align-i
 <label class="small" for="project">Song / recording</label><select class="project" id="project">
 <option>Song A · Remastered</option><option>Song A · Version 4</option><option>Song B · Version 3</option><option>Song B · Version 2</option><option>Song C · Original</option><option>Song C · Versions 2/3</option><option>Song D</option><option>Song E</option><option>Song F</option><option>New unnamed recording</option>
 </select><div class="two" style="margin-top:11px"><button class="btn primary" id="load">＋ Import audio stem</button><button class="btn primary" id="quick">▶ Analyze 25 seconds</button></div><input id="files" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.aiff,.aif,.flac" multiple>
-<p class="small"><button class="btn subtle" id="save" style="width:100%">↓ Save work map</button></p><p class="file-help small">Use the ZIP importer for your Suno 8–12 stem categories. The direct audio importer still works. Detailed ZIPs allow selected import. Large ZIP imports may require free phone storage/memory; process one song version at a time. Nothing is uploaded.</p><div id="status" class="log" role="status" aria-live="polite">v0.5.7 ready. Six detectors run in one real-time pass. The second pass reviews disagreements; chords/layers still require 53-stem separation.</div></section>
+<p class="small"><button class="btn subtle" id="save" style="width:100%">↓ Save work map</button></p><p class="file-help small">Use the ZIP importer for your Suno 8–12 stem categories. The direct audio importer still works. Detailed ZIPs allow selected import. Large ZIP imports may require free phone storage/memory; process one song version at a time. Nothing is uploaded.</p><div id="status" class="log" role="status" aria-live="polite">v0.5.8 ready. Six detectors run in one real-time pass. The second pass reviews disagreements; chords/layers still require 53-stem separation.</div></section>
 <section class="panel"><div class="eyebrow">Mix desk</div><div class="transport"><button id="play" class="btn primary" aria-label="Play or pause">▶</button><input id="seek" class="seek" type="range" min="0" max="100" value="0" step="0.01" aria-label="Song position"><span id="time" class="timer">0:00 / 0:00</span></div>
 <div class="two"><div><label class="small">Master level</label><input type="range" id="master" min="0" max="1.5" step="0.01" value="0.8"></div><div><label class="small">Loop section</label><button id="loop" class="btn subtle" style="width:100%">Loop off</button></div></div>
 <section class="panel" id="comparePanel" style="margin:14px 0;padding:13px;background:#10283b;border-color:#33758d">
@@ -212,7 +212,7 @@ function captureFrame(){const selected=state.tracks.find(t=>t.id===$('analyze').
  }
  lastCaptureSongTime=t;lastCaptureSongTrack=selected.id;
  const p=estimatePitch(selected.analyzer);if(!p){$('pitch').textContent='—';$('hz').textContent=pitchReason;$('detectorStatus').textContent='Detector: '+pitchReason+'. Hearing a note does not guarantee it is isolated enough to transcribe.';return}$('pitch').textContent=notename(p.midi);$('hz').textContent=`${p.hz.toFixed(1)} Hz · ${Math.round(p.confidence*100)}%`;if(!state.playing)return;const prior=state.notes[state.notes.length-1],begin=Math.max(0,t-.075);if(prior&&prior.track===selected.name&&prior.midi===p.midi&&begin-prior.end<.21){prior.end=Math.max(prior.end,t+.06);prior.confidence=Math.max(prior.confidence,p.confidence)}else if(prior&&prior.track===selected.name&&begin-prior.end<.14&&prior.midi!==p.midi){prior.end=Math.max(prior.start+.025,Math.min(prior.end,begin));state.notes.push({start:begin,end:t+.06,midi:p.midi,confidence:p.confidence,track:selected.name})}else state.notes.push({start:begin,end:t+.06,midi:p.midi,confidence:p.confidence,track:selected.name});$('count').textContent=state.notes.length;if(state.notes.length%6===0)renderNotes()}
-// Parallel note recovery v0.5.7: six configurations share ONE normalized
+// Parallel note recovery v0.5.8: six configurations share ONE normalized
 // YIN difference function per frame. The analysis runs entirely in this browser.
 const MULTI_PROFILES=[
  {id:'Soft 6x',mode:'soft',boost:6,rms:.0018,limit:.16,method:'first'},
@@ -304,13 +304,34 @@ function mergeParallelNotes(profiles){
   if(best){best.parts.push(n);best.profiles.push(n.profile);best.start=Math.min(...best.parts.map(x=>x.start));best.end=Math.max(...best.parts.map(x=>x.end));}
   else groups.push({start:n.start,end:n.end,midi:n.midi,parts:[n],profiles:[n.profile],spectralSamples:0,spectralHits:0});
  }
- for(const g of groups){
-  // A different pitch overlapping this note is a conflict, not necessarily a chord.
-  g.conflict=groups.some(h=>h!==g&&h.midi!==g.midi&&Math.min(h.end,g.end)-Math.max(h.start,g.start)>.09);
+ // Second-stage same-pitch consolidation: six threshold profiles may notice
+ // a held note at different moments. Those are overlapping estimates, not
+ // automatically separate repeated MIDI notes. Retain every component in parts.
+ const merged=[];
+ for(const g of groups.sort((a,b)=>a.start-b.start||a.midi-b.midi)){
+  let best=null,bestRatio=0;
+  for(const h of merged){
+   if(h.midi!==g.midi)continue;
+   const overlap=Math.min(h.end,g.end)-Math.max(h.start,g.start);
+   const shorter=Math.min(h.end-h.start,g.end-g.start);
+   const ratio=overlap/Math.max(.001,shorter);
+   if(overlap>=.12&&ratio>=.65&&ratio>bestRatio){best=h;bestRatio=ratio}
+  }
+  if(best){
+   best.parts.push(...g.parts);
+   best.profiles=[...new Set([...best.profiles,...g.profiles])];
+   best.start=Math.min(best.start,g.start);best.end=Math.max(best.end,g.end);
+   best.consolidated=(best.consolidated||1)+(g.consolidated||1);
+  }else merged.push(g);
+ }
+ for(const g of merged){
+  // Distinct simultaneous pitches stay flagged. Do NOT force a chord into
+  // the monophonic detector's guessed fundamental.
+  g.conflict=merged.some(h=>h!==g&&h.midi!==g.midi&&Math.min(h.end,g.end)-Math.max(h.start,g.start)>.09);
   g.tier=g.conflict?'conflict':g.profiles.length>=2?'matched':'single';
   g.avgConfidence=g.parts.reduce((x,n)=>x+n.confidence,0)/g.parts.length;
  }
- return groups.sort((a,b)=>a.start-b.start||a.midi-b.midi);
+ return merged.sort((a,b)=>a.start-b.start||a.midi-b.midi);
 }
 function drawMultiSummary(){const m=state.multi;
  if(!m?.merged?.length){$('multiCounts').textContent='No merged candidates yet.';return}
@@ -449,7 +470,7 @@ function csv(){const rows=['stem,start_seconds,end_seconds,midi_note,note_name,c
 function vlq(n){n=Math.max(0,Math.floor(n));const bytes=[n&0x7f];for(n>>=7;n;n>>=7)bytes.unshift((n&0x7f)|0x80);return bytes}
 function word(n){return[(n>>8)&255,n&255]};function dword(n){return[(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255]}
 function midi(){if(!state.notes.length){status('Capture some notes first; MIDI would otherwise be empty.');return}const events=[];let skipped=0;for(const n of state.notes){if(n.end-n.start<.025){skipped++;continue;}const start=Math.floor(n.start*960),end=Math.max(start+20,Math.floor(n.end*960));events.push([start,[0x90,n.midi,Math.max(42,Math.min(110,Math.round(n.confidence*110)))]]);events.push([end,[0x80,n.midi,0]])}events.sort((a,b)=>a[0]-b[0]||a[1][0]-b[1][0]);const data=[0,0xff,0x51,3,7,161,32];let prev=0;for(const [tick,event] of events){data.push(...vlq(tick-prev),...event);prev=tick}data.push(0,0xff,0x2f,0);if(!events.length){status('No usable MIDI notes (all were shorter than 25 milliseconds).');return}const bytes=new Uint8Array([...Array.from('MThd').map(x=>x.charCodeAt(0)),...dword(6),...word(0),...word(1),...word(480),...Array.from('MTrk').map(x=>x.charCodeAt(0)),...dword(data.length),...data]);download(slug($('project').value)+'_estimated_melody.mid',new Blob([bytes],{type:'audio/midi'}));status(`Exported ${state.notes.length-skipped} estimated MIDI note events. Skipped ${skipped} zero/tiny notes. This does not transcribe chords or layered violin.`)}
-function save(){const output={version:'0.5.7',created:new Date().toISOString(),song:$('project').value,master:+$('master').value,tracks:state.tracks.map(x=>({name:x.name,group:x.group,volume:x.volume,mute:x.mute,solo:x.solo,duration:x.duration})),notes:state.notes,parallel:state.multi?.merged||null,parallelRaw:state.multi?.profiles?.map(p=>({profile:p.id,notes:p.notes}))||null,warning:'Audio not contained; import original stem files when reopening. MIDI is only a rough monophonic draft.'};download(slug($('project').value)+'_phoenix_workmap.json',new Blob([JSON.stringify(output,null,2)],{type:'application/json'}));status('Saved recovery work map (settings and MIDI drafts, not audio files).')}
+function save(){const output={version:'0.5.8',created:new Date().toISOString(),song:$('project').value,master:+$('master').value,tracks:state.tracks.map(x=>({name:x.name,group:x.group,volume:x.volume,mute:x.mute,solo:x.solo,duration:x.duration})),notes:state.notes,parallel:state.multi?.merged||null,parallelRaw:state.multi?.profiles?.map(p=>({profile:p.id,notes:p.notes}))||null,warning:'Audio not contained; import original stem files when reopening. MIDI is only a rough monophonic draft.'};download(slug($('project').value)+'_phoenix_workmap.json',new Blob([JSON.stringify(output,null,2)],{type:'application/json'}));status('Saved recovery work map (settings and MIDI drafts, not audio files).')}
 function clear(){state.notes=[];resetCaptureClock();$('count').textContent='0';renderNotes();status('Cleared rough note draft. Source audio untouched.');}
 function reset(){state.multi=null;setMultiButtons();state.autoUntil=null;state.capturing=false;state.playing=false;resetCaptureClock();for(const t of [...state.tracks])removeTrack(t.id);state.notes=[];setPlay();renderNotes();$('count').textContent='0';status('Audio removed from mixer. Your files on iPhone have not been modified.')}
 
