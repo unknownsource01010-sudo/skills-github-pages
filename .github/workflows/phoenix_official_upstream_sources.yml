@@ -1,0 +1,52 @@
+name: Phoenix official open-source snapshot
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/phoenix_official_upstream_sources.yml
+permissions:
+  contents: read
+jobs:
+  pinned-source-packages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Download and verify official public upstream code
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p deliverable
+          cat > deliverable/README.txt <<'EOF'
+          Official GitHub repository source snapshots, not installers or AI model weights.
+          NeuralNote code: Apache-2.0, model weights CC BY-NC 4.0 (NOT included).
+          StemDeck code: Apache-2.0.
+          Required build submodules and external runtime dependencies are not bundled.
+          Download/build dependencies through each upstream source README.
+          Original official code is unchanged, fetched from pinned commit snapshots.
+          EOF
+          declare -A repos=(
+            [NeuralNote]="DamRsn/NeuralNote"
+            [StemDeck]="stemdeckapp/stemdeck"
+            [muscriptor_cpp]="DamRsn/muscriptor.cpp"
+          )
+          declare -A revs=(
+            [NeuralNote]="1640b22e59b6b33fa1419709aa7653ac4ec768ce"
+            [StemDeck]="5f9405ca68ac31b31ae07ac416141d4d1f7b5f3a"
+            [muscriptor_cpp]="424e9aa22768f8e2db76f2e128bc205223d491f1"
+          )
+          for x in NeuralNote StemDeck muscriptor_cpp; do
+            printf '%s @ %s\n' "${repos[$x]}" "${revs[$x]}" | tee -a deliverable/SOURCE_COMMITS.txt
+            curl --fail --show-error --location --silent --retry 3 \
+              "https://codeload.github.com/${repos[$x]}/zip/${revs[$x]}" \
+              --output "deliverable/${x}_OFFICIAL_FULL_SOURCE.zip"
+            unzip -tqq "deliverable/${x}_OFFICIAL_FULL_SOURCE.zip"
+          done
+          (cd deliverable && sha256sum *_OFFICIAL_FULL_SOURCE.zip > SHA256SUMS.txt)
+          zip -q -0 Phoenix_NeuralNote_StemDeck_Real_Sources.zip deliverable/*
+          unzip -tq Phoenix_NeuralNote_StemDeck_Real_Sources.zip
+          ls -lah deliverable/*.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Phoenix_NeuralNote_StemDeck_Real_Source_ZIP
+          path: Phoenix_NeuralNote_StemDeck_Real_Sources.zip
+          retention-days: 14
